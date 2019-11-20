@@ -30,17 +30,17 @@
   },
   "homepage": "https://github.com/flsy/metaforms#readme",
   "devDependencies": {
-    "@types/jest": "^24.0.22",
-    "jest": "^24.9.0",
-    "prettier": "^1.18.2",
-    "ts-jest": "^24.1.0",
-    "tslint": "^5.20.1",
-    "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.7.2"
+    "@types/jest": "24.0.22",
+    "jest": "24.9.0",
+    "prettier": "1.18.2",
+    "ts-jest": "24.1.0",
+    "tslint": "5.20.1",
+    "tslint-config-prettier": "1.18.0",
+    "typescript": "3.7.2"
   },
   "jest": {
     "transform": {
-      "^.+\\.(t|j)sx?$": "ts-jest"
+      ".+\\.(t|j)sx?$": "ts-jest"
     },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
     "moduleFileExtensions": [
@@ -53,6 +53,6 @@
     ]
   },
   "dependencies": {
-    "fputils": "^1.0.11"
+    "fputils": "1.0.10"
   }
 }
