@@ -1,7 +1,8 @@
 import { lensProp, propEq, prop, head, assoc, compose, foldr, set, curry, map, view, find } from 'fputils';
-import { FormData, Optional, Validation } from './types';
-import { FieldType, UpdateActionType, UpdateAndValidateActionType, ValidateActionType } from './fieldTypes';
-import { validateField } from './validate';
+import { FormData, Optional, Validation } from './validate/interfaces';
+import { FieldType, UpdateActionType, UpdateAndValidateActionType, ValidateActionType } from './interfaces';
+import { validateField } from './validate/validate';
+import { isGroupField } from './helpers';
 
 const valueLens = lensProp('value');
 const errorMessageLens = lensProp('errorMessage');
@@ -96,7 +97,7 @@ export const setFieldValue: SetFieldValue = curry((name: string, value: string, 
 
 export const update = ({ value, name, groupName }: UpdateActionType, fields: FieldType[]): FieldType[] =>
   map(field => {
-    if (groupName && field.type === 'group') {
+    if (groupName && isGroupField(field)) {
       return { ...field, fields: update({ value, name, groupName }, field.fields) };
     } else if (field.name === name) {
       return { ...field, value } as FieldType;
@@ -108,7 +109,7 @@ export const update = ({ value, name, groupName }: UpdateActionType, fields: Fie
 export const validate = ({ name }: ValidateActionType, fields: FieldType[]): FieldType[] => {
   const formData = getFormData(fields);
   return map(field => {
-    if (field.type === 'group') {
+    if (isGroupField(field)) {
       return { ...field, fields: validate({ name }, field.fields) };
     }
     if (field.name === name) {
@@ -123,7 +124,7 @@ export const validate = ({ name }: ValidateActionType, fields: FieldType[]): Fie
 export const updateAndValidate = ({ name, value, groupName }: UpdateAndValidateActionType, fields: FieldType[]): FieldType[] => {
   const formData = getFormData(fields);
   return map(field => {
-    if (groupName && field.type === 'group') {
+    if (groupName && isGroupField(field)) {
       return { ...field, fields: updateAndValidate({ name, value, groupName }, field.fields) };
     } else if (field.name === name) {
       const errorMessage = validateField(formData, { ...field, value } as FieldType);

@@ -1,5 +1,4 @@
-import { FormData, InList, MaxLength, MinLength, MustBeEqual, MustMatch, MustMatchCaseInsensitive, NotPattern, Optional, Pattern, Required, Value } from './types';
-import { FieldType } from './fieldTypes';
+import { FormData, InList, MaxLength, MinLength, MustBeEqual, MustMatch, MustMatchCaseInsensitive, NotPattern, Optional, Pattern, Required, Validation, Value } from './interfaces';
 
 const isBoolean = (value: Value): value is boolean => typeof value === 'boolean';
 const isString = (value: Value): value is string => typeof value === 'string';
@@ -85,7 +84,12 @@ const mustMatchCaseInsensitive = (value: Value, rule: MustMatchCaseInsensitive, 
   return undefined;
 };
 
-export const validateField = (formData: FormData, field: FieldType): Optional<string> => {
+interface IField {
+  value?: Value;
+  validation?: Validation[];
+}
+
+export const validateField = (formData: FormData, field: IField): Optional<string> => {
   const errorMessages = (field.validation || [])
     .map(rule => {
       switch (rule.type) {

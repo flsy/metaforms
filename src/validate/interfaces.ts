@@ -22,7 +22,7 @@ export interface MaxLength {
 
 export interface MustBeEqual {
   type: 'mustbeequal';
-  rules: Array<{ value: boolean; message: string }>;
+  rules: Array<{ value: string | boolean; message: string }>;
 }
 
 export interface InList {

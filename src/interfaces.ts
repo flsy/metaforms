@@ -1,4 +1,4 @@
-import { Validation, Value } from './types';
+import { Validation, Value } from './validate/interfaces';
 
 export type FieldType = InputProps | TextAreaProps | CheckboxProps | SelectProps | ButtonProps | SubmitProps | GroupProps;
 
@@ -24,6 +24,7 @@ export interface CommonProps {
   validation?: Validation[];
   label?: string;
   disabled?: boolean;
+  readOnly?: boolean;
   errorMessage?: string;
   groupName?: string;
   placeholder?: string;

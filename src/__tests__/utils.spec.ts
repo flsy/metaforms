@@ -13,9 +13,9 @@ import {
   update,
   validate,
 } from '../utils';
-import { FieldType } from '../fieldTypes';
-import { Required } from '../types';
-import { required } from '../tools';
+import { FieldType } from '../interfaces';
+import { Required } from '../validate/interfaces';
+import { required } from '../validate/rules';
 
 describe('utils', () => {
   describe('isRequired', () => {
