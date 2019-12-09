@@ -1,5 +1,5 @@
 import { lensProp, propEq, prop, head, assoc, compose, foldr, set, curry, map, view, find } from 'fputils';
-import { FormData, Optional, Validation } from './validate/interfaces';
+import { FormData, Optional, Validation, Value } from "./validate/interfaces";
 import { FieldType, UpdateActionType, UpdateAndValidateActionType, ValidateActionType } from './interfaces';
 import { validateField } from './validate/validate';
 import { isGroupField } from './helpers';
@@ -54,10 +54,8 @@ const clearField = (field: FieldType): FieldType => {
 };
 
 export const validateForm = (fields: FieldType[]): FieldType[] => {
-  const formData = getFormData(fields);
-
   return map(field => {
-    const error = validateField(formData, field);
+    const error = validateField(getFormData(fields), field);
     if (field.fields) {
       return { ...field, fields: validateForm(field.fields) };
     }
@@ -107,13 +105,12 @@ export const update = ({ value, name, groupName }: UpdateActionType, fields: Fie
   }, fields);
 
 export const validate = ({ name }: ValidateActionType, fields: FieldType[]): FieldType[] => {
-  const formData = getFormData(fields);
   return map(field => {
     if (isGroupField(field)) {
       return { ...field, fields: validate({ name }, field.fields) };
     }
     if (field.name === name) {
-      const errorMessage = validateField(formData, field);
+      const errorMessage = validateField(getFormData(fields), field);
       return { ...field, errorMessage };
     }
 
@@ -122,12 +119,11 @@ export const validate = ({ name }: ValidateActionType, fields: FieldType[]): Fie
 };
 
 export const updateAndValidate = ({ name, value, groupName }: UpdateAndValidateActionType, fields: FieldType[]): FieldType[] => {
-  const formData = getFormData(fields);
   return map(field => {
     if (groupName && isGroupField(field)) {
       return { ...field, fields: updateAndValidate({ name, value, groupName }, field.fields) };
     } else if (field.name === name) {
-      const errorMessage = validateField(formData, { ...field, value } as FieldType);
+      const errorMessage = validateField(getFormData(fields), { ...field, value });
       return { ...field, value, errorMessage } as FieldType;
     } else {
       return field;

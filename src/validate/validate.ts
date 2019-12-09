@@ -4,8 +4,11 @@ const isBoolean = (value: Value): value is boolean => typeof value === 'boolean'
 const isString = (value: Value): value is string => typeof value === 'string';
 
 const isEmpty = (value: Value, rule: Required): Optional<string> => {
-  const errorMessage = rule.rules[0].message;
-  return value === null || value === undefined || value === '' ? errorMessage : undefined;
+  const failingRule = rule.rules.find(() => {
+    return value === null || value === undefined || value === '';
+  });
+
+  return failingRule && failingRule.message;
 };
 
 const getErrorIfDoesNotMatchRegEx = (value: Value, rule: Pattern): Optional<string> => {
@@ -50,38 +53,45 @@ const isInList = (value: Value, rule: InList): Optional<string> => {
 };
 
 const isGreaterThanMaxLength = (value: Value, rule: MaxLength): Optional<string> => {
-  const first = rule.rules[0];
-  if (isString(value)) {
-    return value.length > first.value ? first.message : undefined;
-  }
-  return undefined;
+  const failingRule = rule.rules.find(r => {
+    if (isString(value)) {
+      return value.length > r.value;
+    }
+    return false;
+  });
+
+  return failingRule && failingRule.message;
 };
 
 const isLessThanMinLength = (value: Value, rule: MinLength): Optional<string> => {
-  const first = rule.rules[0];
-  if (isString(value)) {
-    return value.length < first.value ? first.message : undefined;
-  }
-  return undefined;
+  const failingRule = rule.rules.find(r => {
+    if (isString(value)) {
+      return value.length < r.value;
+    }
+    return false;
+  });
+
+  return failingRule && failingRule.message;
 };
 
 const mustMatch = (value: Value, rule: MustMatch, formData: FormData): Optional<string> => {
-  const first = rule.rules[0];
-  const name = first.value;
-
-  return formData[name] && formData[name] !== value ? first.message : undefined;
+  const failingRule = rule.rules.find(r => {
+    return formData[r.value] && formData[r.value] !== value;
+  });
+  return failingRule && failingRule.message;
 };
 
 const equalIgnoreCase = (a?: string, b?: string) => a && b && a.toLowerCase() === b.toLowerCase();
 
 const mustMatchCaseInsensitive = (value: Value, rule: MustMatchCaseInsensitive, formData: FormData): Optional<string> => {
-  const first = rule.rules[0];
+  const failingRule = rule.rules.find(r => {
+    if (isString(value)) {
+      return !equalIgnoreCase(formData[r.value] as string, value);
+    }
+    return false;
+  });
 
-  const name = first.value;
-  if (isString(value)) {
-    return !equalIgnoreCase(formData[name] as string, value) ? first.message : undefined;
-  }
-  return undefined;
+  return failingRule && failingRule.message;
 };
 
 interface IField {

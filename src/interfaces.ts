@@ -4,7 +4,7 @@ export type FieldType = InputProps | TextAreaProps | CheckboxProps | SelectProps
 
 export interface UpdateActionType {
   name: string;
-  value: string;
+  value: Value;
   groupName?: string;
 }
 
