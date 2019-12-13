@@ -29,6 +29,9 @@
     "url": "https://github.com/flsy/metaforms/issues"
   },
   "homepage": "https://github.com/flsy/metaforms#readme",
+  "dependencies": {
+    "fputils": "1.0.10"
+  },
   "devDependencies": {
     "@types/jest": "24.0.22",
     "jest": "24.9.0",
@@ -51,8 +54,5 @@
       "json",
       "node"
     ]
-  },
-  "dependencies": {
-    "fputils": "1.0.10"
   }
 }

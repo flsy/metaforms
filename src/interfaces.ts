@@ -43,22 +43,10 @@ export interface SelectProps extends CommonProps {
   options: string[];
 }
 
-interface StringRelated extends CommonProps {
-  type: 'text' | 'password' | 'email';
-  value?: string;
+interface InputProps extends CommonProps {
+  type: 'text' | 'password' | 'email' | 'number' | 'datetime-local';
+  value?: string | number | Date;
 }
-
-interface NumberRelated extends CommonProps {
-  type: 'number';
-  value?: number;
-}
-
-interface DateTimeInputProps extends CommonProps {
-  type: 'datetime-local';
-  value?: Date;
-}
-
-export type InputProps = StringRelated | NumberRelated | DateTimeInputProps;
 
 export interface TextAreaProps extends CommonProps {
   type: 'textarea';
