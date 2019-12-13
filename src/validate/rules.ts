@@ -44,7 +44,7 @@ export const mustmatchcaseinsensitive = (...rules: Array<{ message: string; valu
   rules,
 });
 
-export const mustbeequal = (...rules: Array<{ message: string; value: string | boolean }>): MustBeEqual => ({
+export const mustbeequal = (...rules: Array<{ message: string; value: Value }>): MustBeEqual => ({
   type: 'mustbeequal',
   rules,
 });

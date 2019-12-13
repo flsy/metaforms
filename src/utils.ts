@@ -1,5 +1,5 @@
-import { lensProp, propEq, prop, head, assoc, compose, foldr, set, curry, map, view, find } from 'fputils';
-import { FormData, Optional, Validation, Value } from "./validate/interfaces";
+import { assoc, compose, curry, find, foldr, head, lensProp, map, prop, propEq, set, view } from 'fputils';
+import { FormData, Optional, Validation } from './validate/interfaces';
 import { FieldType, UpdateActionType, UpdateAndValidateActionType, ValidateActionType } from './interfaces';
 import { validateField } from './validate/validate';
 import { isGroupField } from './helpers';
@@ -33,7 +33,7 @@ export const getFormData = (fields: FieldType[]): FormData =>
         return { ...all, ...getFormData(field.fields) };
       }
 
-      return assoc(field.name, field.value || null, all);
+      return assoc(field.name, field.value, all);
     },
     {},
     fields,

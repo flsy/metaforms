@@ -16,4 +16,10 @@ describe('mustbeequal', () => {
 
     expect(errorMessage).toEqual(undefined);
   });
+
+  it('should work for number types', () => {
+    expect(validateField({}, { value: 5, validation: [mustbeequal({ message: 'no', value: true })] })).toEqual('no');
+    expect(validateField({}, { value: 5, validation: [mustbeequal({ message: 'no', value: 6 })] })).toEqual('no');
+    expect(validateField({}, { value: 5, validation: [mustbeequal({ message: 'no', value: 5 })] })).toEqual(undefined);
+  });
 });

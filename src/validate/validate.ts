@@ -1,6 +1,5 @@
 import { FormData, InList, MaxLength, MinLength, MustBeEqual, MustMatch, MustMatchCaseInsensitive, NotPattern, Optional, Pattern, Required, Validation, Value } from './interfaces';
 
-const isBoolean = (value: Value): value is boolean => typeof value === 'boolean';
 const isString = (value: Value): value is string => typeof value === 'string';
 
 const isEmpty = (value: Value, rule: Required): Optional<string> => {
@@ -12,44 +11,33 @@ const isEmpty = (value: Value, rule: Required): Optional<string> => {
 };
 
 const getErrorIfDoesNotMatchRegEx = (value: Value, rule: Pattern): Optional<string> => {
-  if (isBoolean(value)) {
-    return undefined;
-  }
-  if (!value || value.length === 0) {
-    return undefined;
-  }
+  if (isString(value) && value.length > 0) {
+    const messages = rule.rules.filter(pattern => value.match(pattern.value) === null);
 
-  const messages = rule.rules.filter(pattern => value.match(pattern.value) === null).map(pattern => pattern.message);
-
-  return messages.length > 0 ? messages[0] : undefined;
-};
-
-const getErrorIfMatchesRegEx = (value: Value, rule: NotPattern): Optional<string> => {
-  if (isBoolean(value)) {
-    return undefined;
-  }
-
-  if (!value || value.length === 0) {
-    return undefined;
-  }
-
-  const errors = rule.rules.filter(pattern => value.match(pattern.value) !== null).map(pattern => pattern.message);
-
-  return errors.length > 0 ? errors[0] : undefined;
-};
-
-const isNotEqualToExpectedValue = (value: Value, rule: MustBeEqual): Optional<string> => {
-  const first = rule.rules[0];
-  if (isBoolean(value)) {
-    return value !== first.value ? first.message : undefined;
+    return messages.length > 0 ? messages[0].message : undefined;
   }
   return undefined;
 };
 
-const isInList = (value: Value, rule: InList): Optional<string> => {
-  const first = rule.rules[0];
+const getErrorIfMatchesRegEx = (value: Value, rule: NotPattern): Optional<string> => {
+  if (isString(value) && value.length > 0) {
+    const errors = rule.rules.filter(pattern => value.match(pattern.value) !== null);
 
-  return first.value.indexOf(value) > -1 ? undefined : first.message;
+    return errors.length > 0 ? errors[0].message : undefined;
+  }
+  return undefined;
+};
+
+const isNotEqualToExpectedValue = (value: Value, rule: MustBeEqual): Optional<string> => {
+  const failingRule = rule.rules.find(r => value !== r.value);
+  return failingRule && failingRule.message;
+};
+
+const isInList = (value: Value, rule: InList): Optional<string> => {
+  const failingRule = rule.rules.find(r => {
+    return r.value.indexOf(value) === -1;
+  });
+  return failingRule && failingRule.message;
 };
 
 const isGreaterThanMaxLength = (value: Value, rule: MaxLength): Optional<string> => {

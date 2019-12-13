@@ -14,4 +14,9 @@ describe('required', () => {
     const errorMessage = validateField({}, { value: 'Jan', validation });
     expect(errorMessage).toEqual(undefined);
   });
+
+  it('should work for numbers', () => {
+    expect(validateField({}, { value: 0, validation })).toEqual(undefined);
+    expect(validateField({}, { value: 5, validation })).toEqual(undefined);
+  });
 });

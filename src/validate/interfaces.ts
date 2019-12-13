@@ -1,5 +1,5 @@
 export type Optional<T> = T | undefined;
-export type Value = Optional<string | boolean>;
+export type Value = string | boolean | number | Date | undefined;
 
 export interface FormData {
   [name: string]: Optional<Value>;
@@ -22,7 +22,7 @@ export interface MaxLength {
 
 export interface MustBeEqual {
   type: 'mustbeequal';
-  rules: Array<{ value: string | boolean; message: string }>;
+  rules: Array<{ value: Value; message: string }>;
 }
 
 export interface InList {

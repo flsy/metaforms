@@ -1,21 +1,7 @@
-import {
-  isRequired,
-  hasError,
-  // getValue,
-  // setValue,
-  // findField,
-  // getErrorMessage,
-  // removeField,
-  validateForm,
-  getFormData,
-  getFieldValue,
-  setFieldValue,
-  update,
-  validate,
-} from '../utils';
+import { getFieldValue, hasError, isRequired, setFieldValue, update, validate, validateForm } from '../utils';
 import { FieldType } from '../interfaces';
-import { Required } from '../validate/interfaces';
-import { required } from '../validate/rules';
+import { Required } from '..';
+import { required } from '..';
 
 describe('utils', () => {
   describe('isRequired', () => {
@@ -36,36 +22,6 @@ describe('utils', () => {
 
       const fields = [{ type: 'group', fields: [{ errorMessage: 'yes error' }] }] as FieldType[];
       expect(hasError(fields)).toEqual(true);
-    });
-  });
-
-  describe('getFormData', () => {
-    it('returns formdata from fields', () => {
-      expect(getFormData([])).toEqual({});
-      expect(getFormData([{ name: 'field1' }] as FieldType[])).toEqual({ field1: null });
-      expect(getFormData([{ type: 'text', name: 'field1', value: 'some value' }] as FieldType[])).toEqual({
-        field1: 'some value',
-      });
-    });
-
-    it('returns formdata from nested fields', () => {
-      const fields: FieldType[] = [
-        { name: 'a', type: 'text' },
-        { name: 'b', type: 'text', value: 'valueB' },
-        {
-          name: 'groupA',
-          type: 'group',
-          fields: [{ name: 'c', type: 'text', value: 'valueC' }, { name: 'd', type: 'text' }],
-        },
-      ];
-
-      const expected = {
-        a: null,
-        b: 'valueB',
-        c: 'valueC',
-        d: null,
-      };
-      expect(getFormData(fields)).toEqual(expected);
     });
   });
 
@@ -283,7 +239,13 @@ describe('utils', () => {
     it('validates a structure', () => {
       expect(validate({ name: 'a' }, [])).toEqual([]);
       expect(validate({ name: 'a' }, [{ name: 'b', validation } as FieldType])).toEqual([{ name: 'b', validation }]);
-      expect(validate({ name: 'b' }, [{ name: 'b', validation } as FieldType])).toEqual([{ name: 'b', validation, errorMessage }]);
+      expect(validate({ name: 'b' }, [{ name: 'b', validation } as FieldType])).toEqual([
+        {
+          name: 'b',
+          validation,
+          errorMessage,
+        },
+      ]);
     });
 
     it('validates a nested structure', () => {
