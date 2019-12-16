@@ -1,25 +1,10 @@
-import {
-  FormData,
-  InList,
-  MaxLength,
-  MinLength,
-  MustBeEqual,
-  MustMatch,
-  MustMatchCaseInsensitive,
-  Mustnotcontain,
-  NotPattern,
-  Optional,
-  Pattern,
-  Required,
-  Validation,
-  Value
-} from "./interfaces";
+import { FormData, InList, MaxLength, MinLength, MustBeEqual, MustMatch, MustMatchCaseInsensitive, Mustnotcontain, NotPattern, Optional, Pattern, Required, Validation, Value } from './interfaces';
 
-const isString = (value: Value): value is string => typeof value === "string";
+const isString = (value: Value): value is string => typeof value === 'string';
 
 const isEmpty = (value: Value, rule: Required): Optional<string> => {
   const failingRule = rule.rules.find(() => {
-    return value === null || value === undefined || value === "";
+    return value === null || value === undefined || value === '';
   });
 
   return failingRule && failingRule.message;
@@ -116,34 +101,34 @@ export const validateField = (formData: FormData, field: IField): Optional<strin
   const errorMessages = (field.validation || [])
     .map(rule => {
       switch (rule.type) {
-        case "required":
+        case 'required':
           return isEmpty(field.value, rule);
 
-        case "minlength":
+        case 'minlength':
           return isLessThanMinLength(field.value, rule);
 
-        case "maxlength":
+        case 'maxlength':
           return isGreaterThanMaxLength(field.value, rule);
 
-        case "mustbeequal":
+        case 'mustbeequal':
           return isNotEqualToExpectedValue(field.value, rule);
 
-        case "inlist":
+        case 'inlist':
           return isInList(field.value, rule);
 
-        case "pattern":
+        case 'pattern':
           return getErrorIfDoesNotMatchRegEx(field.value, rule);
 
-        case "notpattern":
+        case 'notpattern':
           return getErrorIfMatchesRegEx(field.value, rule);
 
-        case "mustmatch":
+        case 'mustmatch':
           return mustMatch(field.value, rule, formData);
 
-        case "mustmatchcaseinsensitive":
+        case 'mustmatchcaseinsensitive':
           return mustMatchCaseInsensitive(field.value, rule, formData);
 
-        case "mustnotcontain":
+        case 'mustnotcontain':
           return mustNotContain(field.value, rule, formData);
 
         default:

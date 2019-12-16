@@ -1,18 +1,18 @@
-import { assoc, compose, curry, find, foldr, head, lensProp, map, prop, propEq, set, view } from "fputils";
-import { Optional, Validation } from "./validate/interfaces";
-import { FieldType, UpdateActionType, UpdateAndValidateActionType, ValidateActionType } from "./interfaces";
-import { validateField } from "./validate/validate";
-import { isGroupField } from "./helpers";
-import { required } from "./validate/rules";
+import { assoc, compose, curry, find, foldr, head, lensProp, map, prop, propEq, set, view } from 'fputils';
+import { Optional, Validation } from './validate/interfaces';
+import { FieldType, UpdateActionType, UpdateAndValidateActionType, ValidateActionType } from './interfaces';
+import { validateField } from './validate/validate';
+import { isGroupField } from './helpers';
+import { required } from './validate/rules';
 
-const valueLens = lensProp("value");
-const errorMessageLens = lensProp("errorMessage");
+const valueLens = lensProp('value');
+const errorMessageLens = lensProp('errorMessage');
 
-export const isRequired = (validationRules: Validation[] = []): boolean => !!find(propEq("type", "required"), validationRules);
+export const isRequired = (validationRules: Validation[] = []): boolean => !!find(propEq('type', 'required'), validationRules);
 
-export const hasError = (fields: FieldType[]): boolean => !!find(field => (field.fields ? hasError(field.fields) : !!prop("errorMessage", field)), fields);
+export const hasError = (fields: FieldType[]): boolean => !!find(field => (field.fields ? hasError(field.fields) : !!prop('errorMessage', field)), fields);
 
-const hasFieldError = (field: FieldType): boolean => !!prop("errorMessage", field);
+const hasFieldError = (field: FieldType): boolean => !!prop('errorMessage', field);
 
 const findFieldWithError = (fields: FieldType[]) => find(hasFieldError, fields);
 
@@ -27,19 +27,16 @@ export const shouldComponentFocus = (fields: FieldType[]): Optional<string> => {
   return firstField && firstField.name;
 };
 
-export const getFormData = <Name extends FieldType["name"]>(fields: FieldType[]): { [key in Name]: FieldType["value"] } =>
-  foldr((field, all) => (field.fields) ? { ...all, ...getFormData(field.fields) } : assoc(field.name, field.value, all),
-    {},
-    fields
-  );
+export const getFormData = <Name extends FieldType['name']>(fields: FieldType[]): { [key in Name]: FieldType['value'] } =>
+  foldr((field, all) => (field.fields ? { ...all, ...getFormData(field.fields) } : assoc(field.name, field.value, all)), {}, fields);
 
 const clearField = (field: FieldType): FieldType => {
-  if (propEq("errorMessage", null, field)) {
+  if (propEq('errorMessage', null, field)) {
     const { errorMessage, ...rest } = field;
     return rest;
   }
 
-  if (propEq("errorMessage", undefined, field)) {
+  if (propEq('errorMessage', undefined, field)) {
     const { errorMessage, ...rest } = field;
     return rest;
   }
@@ -56,7 +53,7 @@ export const validateForm = (fields: FieldType[]): FieldType[] => {
 
     return compose(
       clearField,
-      set(errorMessageLens, error)
+      set(errorMessageLens, error),
     )(field);
   }, fields);
 };
@@ -72,7 +69,7 @@ const updateField = curry((name: string, fn: <Val>(value: Val) => Val, fields: F
     }
 
     return field;
-  }, fields)
+  }, fields),
 );
 
 export interface GetFieldValue {
