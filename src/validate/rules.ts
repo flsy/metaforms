@@ -1,4 +1,16 @@
-import { InList, MaxLength, MinLength, MustBeEqual, MustMatch, MustMatchCaseInsensitive, NotPattern, Pattern, Required, Value } from './interfaces';
+import {
+  InList,
+  MaxLength,
+  MinLength,
+  MustBeEqual,
+  MustMatch,
+  MustMatchCaseInsensitive,
+  Mustnotcontain,
+  NotPattern,
+  Pattern,
+  Required,
+  Value
+} from "./interfaces";
 
 export const required = (message: string): Required => ({
   type: 'required',
@@ -29,7 +41,7 @@ export const notpattern = (...rules: Array<{ message: string; value: string }>):
   rules,
 });
 
-export const mustnotcontain = (...rules: Array<{ message: string; value: string }>) => ({
+export const mustnotcontain = (...rules: Array<{ message: string; value: string }>): Mustnotcontain => ({
   type: 'mustnotcontain',
   rules,
 });

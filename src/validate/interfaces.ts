@@ -40,6 +40,11 @@ export interface NotPattern {
   rules: Array<{ value: string; message: string }>;
 }
 
+export interface Mustnotcontain {
+  type: 'mustnotcontain';
+  rules: Array<{ value: string; message: string }>;
+}
+
 export interface MustMatch {
   type: 'mustmatch';
   rules: Array<{ value: string; message: string }>;
@@ -50,4 +55,4 @@ export interface MustMatchCaseInsensitive {
   rules: Array<{ value: string; message: string }>;
 }
 
-export type Validation = InList | MustBeEqual | Required | MinLength | MaxLength | Pattern | NotPattern | MustMatch | MustMatchCaseInsensitive;
+export type Validation = InList | MustBeEqual | Required | MinLength | MaxLength | Pattern | NotPattern | Mustnotcontain | MustMatch | MustMatchCaseInsensitive;

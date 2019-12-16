@@ -1,10 +1,25 @@
-import { FormData, InList, MaxLength, MinLength, MustBeEqual, MustMatch, MustMatchCaseInsensitive, NotPattern, Optional, Pattern, Required, Validation, Value } from './interfaces';
+import {
+  FormData,
+  InList,
+  MaxLength,
+  MinLength,
+  MustBeEqual,
+  MustMatch,
+  MustMatchCaseInsensitive,
+  Mustnotcontain,
+  NotPattern,
+  Optional,
+  Pattern,
+  Required,
+  Validation,
+  Value
+} from "./interfaces";
 
-const isString = (value: Value): value is string => typeof value === 'string';
+const isString = (value: Value): value is string => typeof value === "string";
 
 const isEmpty = (value: Value, rule: Required): Optional<string> => {
   const failingRule = rule.rules.find(() => {
-    return value === null || value === undefined || value === '';
+    return value === null || value === undefined || value === "";
   });
 
   return failingRule && failingRule.message;
@@ -69,6 +84,16 @@ const mustMatch = (value: Value, rule: MustMatch, formData: FormData): Optional<
   return failingRule && failingRule.message;
 };
 
+const mustNotContain = (value: Value, rule: Mustnotcontain, formData: FormData): Optional<string> => {
+  const failingRule = rule.rules.find(r => {
+    const data = formData[r.value];
+    if (data && isString(data) && isString(value)) {
+      return value.toLowerCase().includes(data.toLowerCase());
+    }
+  });
+  return failingRule && failingRule.message;
+};
+
 const equalIgnoreCase = (a?: string, b?: string) => a && b && a.toLowerCase() === b.toLowerCase();
 
 const mustMatchCaseInsensitive = (value: Value, rule: MustMatchCaseInsensitive, formData: FormData): Optional<string> => {
@@ -91,32 +116,35 @@ export const validateField = (formData: FormData, field: IField): Optional<strin
   const errorMessages = (field.validation || [])
     .map(rule => {
       switch (rule.type) {
-        case 'required':
+        case "required":
           return isEmpty(field.value, rule);
 
-        case 'minlength':
+        case "minlength":
           return isLessThanMinLength(field.value, rule);
 
-        case 'maxlength':
+        case "maxlength":
           return isGreaterThanMaxLength(field.value, rule);
 
-        case 'mustbeequal':
+        case "mustbeequal":
           return isNotEqualToExpectedValue(field.value, rule);
 
-        case 'inlist':
+        case "inlist":
           return isInList(field.value, rule);
 
-        case 'pattern':
+        case "pattern":
           return getErrorIfDoesNotMatchRegEx(field.value, rule);
 
-        case 'notpattern':
+        case "notpattern":
           return getErrorIfMatchesRegEx(field.value, rule);
 
-        case 'mustmatch':
+        case "mustmatch":
           return mustMatch(field.value, rule, formData);
 
-        case 'mustmatchcaseinsensitive':
+        case "mustmatchcaseinsensitive":
           return mustMatchCaseInsensitive(field.value, rule, formData);
+
+        case "mustnotcontain":
+          return mustNotContain(field.value, rule, formData);
 
         default:
           return undefined;
