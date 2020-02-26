@@ -6,6 +6,7 @@ import { isGroupField } from './helpers';
 import { required } from './validate/rules';
 
 const valueLens = lensProp('value');
+const optionsLens = lensProp('options');
 const errorMessageLens = lensProp('errorMessage');
 
 export const isRequired = (validationRules: Validation[] = []): boolean => !!find(propEq('type', 'required'), validationRules);
@@ -86,7 +87,19 @@ export interface SetFieldValue {
   <Val>(name: string, value: Val): (fields: FieldType[]) => FieldType[];
 }
 
-export const setFieldValue: SetFieldValue = curry((name: string, value: string, fields: FieldType[]): FieldType[] => updateField(name, set(valueLens, value), fields));
+export const setFieldValue: SetFieldValue = curry((name, value, fields): FieldType[] => updateField(name, set(valueLens, value), fields));
+
+export interface Option<T> {
+  value: T;
+  label?: string;
+}
+
+export interface SetFieldOptions {
+  <Val>(name: string, options: Array<Option<Val>>, fields: FieldType[]): FieldType[];
+
+  <Val>(name: string, options: Array<Option<Val>>): (fields: FieldType[]) => FieldType[];
+}
+export const setFieldOptions: SetFieldOptions = curry((name, options, fields) => updateField(name, set(optionsLens, options), fields));
 
 export const update = ({ value, name, groupName }: UpdateActionType, fields: FieldType[]): FieldType[] =>
   map(field => {

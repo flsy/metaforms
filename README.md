@@ -1,13 +1,8 @@
-# metaforms
+# Metaforms
 
-A tool for building and managing forms.
+A tool for building and managing forms in simple JSON format.
 
-```shell
-npm i metaforms
-```
-
-
-Example usage:
+## usage:
 ```typescript
 import { hasError, pattern, required, setFieldValue, validateForm } from "metaforms";
 

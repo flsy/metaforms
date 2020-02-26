@@ -39,8 +39,8 @@ export interface CheckboxProps extends CommonProps {
 
 export interface SelectProps extends CommonProps {
   type: 'select';
-  value?: string;
-  options: string[];
+  value?: string | number;
+  options?: Array<{ value: string | number; label?: string }>;
 }
 
 export interface InputProps extends CommonProps {

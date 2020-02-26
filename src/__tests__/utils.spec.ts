@@ -1,7 +1,6 @@
-import { getFieldValue, hasError, isRequired, setFieldValue, update, validate, validateForm } from '../utils';
+import { getFieldValue, hasError, isRequired, setFieldOptions, setFieldValue, update, validate, validateForm } from '../utils';
 import { FieldType } from '../interfaces';
-import { Required } from '..';
-import { required } from '..';
+import { Required, required } from '..';
 
 describe('utils', () => {
   describe('isRequired', () => {
@@ -104,9 +103,9 @@ describe('utils', () => {
     it('sets a value on exact field', () => {
       const fields = [{ name: 'a' }, { name: 'b' }] as FieldType[];
 
-      expect(setFieldValue<string>('a', 'hey yo!')(fields)[0].value).toEqual('hey yo!');
+      expect(setFieldValue('a', 'hey yo!')(fields)[0].value).toEqual('hey yo!');
       expect(fields[1].value).toEqual(undefined);
-      expect(setFieldValue<string>('b', 'b yo!', fields)[1].value).toEqual('b yo!');
+      expect(setFieldValue('b', 'b yo!', fields)[1].value).toEqual('b yo!');
     });
 
     it('sets a value on nested fields', () => {
@@ -130,6 +129,36 @@ describe('utils', () => {
           });
         }
       });
+    });
+  });
+
+  describe('setSelectOptions', () => {
+    it('return an empty array when no fields are passed in', () => {
+      const result = setFieldOptions('name', [])([]);
+      expect(result).toEqual([]);
+    });
+
+    it('returns a field with no options when no options are passed in', () => {
+      const fields: FieldType[] = [
+        {
+          name: 'name',
+          type: 'select',
+          options: [],
+        },
+      ];
+      const result = setFieldOptions('name', [])(fields);
+      expect(result).toEqual(fields);
+    });
+
+    it('returns a field with options', () => {
+      const options: any = [{ value: 1, label: 'First' }, { value: 2, label: 'second' }];
+      const field: FieldType = {
+        name: 'name',
+        type: 'select',
+        options: [],
+      };
+      const result = setFieldOptions('name', options)([field]);
+      expect(result).toEqual([{ ...field, options }]);
     });
   });
 
