@@ -45,10 +45,10 @@ const clearField = (field: FieldType): FieldType => {
   return field;
 };
 
-export const validateForm = (fields: FieldType[]): FieldType[] => {
-  return map(field => {
+export const validateForm = (fields: FieldType[]): FieldType[] =>
+  map(field => {
     const error = validateField(getFormData(fields), field);
-    if (field.fields) {
+    if (isGroupField(field)) {
       return { ...field, fields: validateForm(field.fields) };
     }
 
@@ -57,21 +57,21 @@ export const validateForm = (fields: FieldType[]): FieldType[] => {
       set(errorMessageLens, error),
     )(field);
   }, fields);
-};
 
-const updateField = curry((name: string, fn: <Val>(value: Val) => Val, fields: FieldType[]): FieldType[] =>
+type IUpdateField = (name: string | string[], fn: <Val>(value: Val) => Val, fields: FieldType[]) => FieldType[];
+
+const updateField: IUpdateField = (name, fn, fields): FieldType[] =>
   map(field => {
-    if (field.fields) {
-      return { ...field, fields: updateField(name, fn, field.fields) };
-    }
-
     if (field.name === name) {
       return fn(field);
     }
 
+    if (isGroupField(field)) {
+      return { ...field, fields: updateField(name, fn, field.fields) };
+    }
+
     return field;
-  }, fields),
-);
+  }, fields);
 
 export interface GetFieldValue {
   <Val>(name: string, fields: FieldType[]): Optional<Val>;
@@ -81,25 +81,30 @@ export interface GetFieldValue {
 
 export const getFieldValue: GetFieldValue = curry((name, fields) => view(lensProp(name), getFormData(fields)) || undefined);
 
-export interface SetFieldValue {
+type SetFieldValue = <Val>(name: string, value: Val, fields: FieldType[]) => FieldType[];
+
+export interface SetFieldValueCurried {
   <Val>(name: string, value: Val, fields: FieldType[]): FieldType[];
 
   <Val>(name: string, value: Val): (fields: FieldType[]) => FieldType[];
 }
 
-export const setFieldValue: SetFieldValue = curry((name, value, fields): FieldType[] => updateField(name, set(valueLens, value), fields));
+export const setFieldValue: SetFieldValueCurried = curry<SetFieldValue>((name, value, fields): FieldType[] => updateField(name, set(valueLens, value), fields));
 
 export interface Option<T> {
   value: T;
   label?: string;
 }
 
-export interface SetFieldOptions {
+export type SetFieldOptions = <Val>(name: string, options: Array<Option<Val>>, fields: FieldType[]) => FieldType[];
+
+export interface SetFieldOptionsCurried {
   <Val>(name: string, options: Array<Option<Val>>, fields: FieldType[]): FieldType[];
 
   <Val>(name: string, options: Array<Option<Val>>): (fields: FieldType[]) => FieldType[];
 }
-export const setFieldOptions: SetFieldOptions = curry((name, options, fields) => updateField(name, set(optionsLens, options), fields));
+
+export const setFieldOptions: SetFieldOptionsCurried = curry<SetFieldOptions>((name, options, fields) => updateField(name, set(optionsLens, options), fields));
 
 export const update = ({ value, name, groupName }: UpdateActionType, fields: FieldType[]): FieldType[] =>
   map(field => {

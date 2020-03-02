@@ -108,27 +108,32 @@ describe('utils', () => {
       expect(setFieldValue('b', 'b yo!', fields)[1].value).toEqual('b yo!');
     });
 
+    it('sets a numeric value', () => {
+      const fields = [{ name: 'a' }] as FieldType[];
+
+      expect(setFieldValue('a', 12)(fields)[0].value).toEqual(12);
+    });
+
     it('sets a value on nested fields', () => {
-      const fields = [
-        { name: 'a' },
+      const fields: FieldType[] = [
+        { name: 'a', type: 'text' },
         {
           name: 'b',
-          fields: [{ name: 'c' }, { name: 'd' }],
+          type: 'group',
+          fields: [{ name: 'c', type: 'text' }, { name: 'd', type: 'text' }],
         },
-      ] as FieldType[];
+      ];
 
       const updated = setFieldValue('c', 'value C', fields);
 
-      const values = ['value C', undefined];
-
-      updated.forEach((field, i) => {
-        expect(field.value).toEqual(undefined);
-        if (field.fields) {
-          field.fields.forEach((f, y) => {
-            expect(f.value).toEqual(values[y]);
-          });
-        }
-      });
+      expect(updated).toEqual([
+        { name: 'a', type: 'text' },
+        {
+          name: 'b',
+          type: 'group',
+          fields: [{ name: 'c', type: 'text', value: 'value C' }, { name: 'd', type: 'text' }],
+        },
+      ]);
     });
   });
 
@@ -159,6 +164,62 @@ describe('utils', () => {
       };
       const result = setFieldOptions('name', options)([field]);
       expect(result).toEqual([{ ...field, options }]);
+    });
+
+    it('set options on nested field', () => {
+      const options: any = [{ value: 1, label: 'First' }, { value: 2, label: 'second' }];
+      const fields: FieldType[] = [
+        {
+          type: 'group',
+          name: 'groups',
+          fields: [
+            {
+              type: 'group',
+              name: 'group-1',
+              fields: [
+                {
+                  name: 'select-1',
+                  type: 'select',
+                  options,
+                },
+              ],
+            },
+          ],
+        },
+      ];
+
+      const result = setFieldOptions('select-1', options, fields);
+      expect(result).toEqual(fields);
+    });
+
+    it('set options on nested field but not the last nested one', () => {
+      const options: any = [{ value: 1, label: 'First' }, { value: 2, label: 'second' }];
+      const fields: FieldType[] = [
+        {
+          type: 'group',
+          name: 'groups',
+          fields: [
+            {
+              type: 'group',
+              name: 'group-1',
+              fields: [
+                {
+                  name: 'select-1',
+                  type: 'select',
+                },
+              ],
+            },
+            {
+              name: 'select-2',
+              type: 'select',
+              options,
+            },
+          ],
+        },
+      ];
+
+      const result = setFieldOptions('select-2', options, fields);
+      expect(result).toEqual(fields);
     });
   });
 
