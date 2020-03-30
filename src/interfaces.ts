@@ -44,7 +44,7 @@ export interface SelectProps extends CommonProps {
 }
 
 export interface InputProps extends CommonProps {
-  type: 'text' | 'password' | 'email' | 'number' | 'datetime-local';
+  type: 'text' | 'password' | 'email' | 'number' | 'hidden' | 'date' | 'datetime-local';
   value?: string | number | Date;
 }
 
