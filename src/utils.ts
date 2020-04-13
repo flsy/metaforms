@@ -79,7 +79,7 @@ export interface GetFieldValue {
   <Val>(name: string): (fields: FieldType[]) => Optional<Val>;
 }
 
-export const getFieldValue: GetFieldValue = curry((name, fields) => view(lensProp(name), getFormData(fields)) || undefined);
+export const getFieldValue: GetFieldValue = curry((name, fields) => view(lensProp(name), getFormData(fields)));
 
 type SetFieldValue = <Val>(name: string, value: Val, fields: FieldType[]) => FieldType[];
 

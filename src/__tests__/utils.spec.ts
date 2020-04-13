@@ -308,12 +308,14 @@ describe('utils', () => {
           type: 'group',
           fields: [{ name: 'd', value: 'd value', type: 'text' }],
         },
+        { name: 'e', type: 'checkbox', value: false },
       ];
 
       expect(getFieldValue<string>('a', fields)).toEqual('a value');
       expect(getFieldValue('b', fields)).toEqual(undefined);
       expect(getFieldValue('c', fields)).toEqual(undefined);
       expect(getFieldValue('d')(fields)).toEqual('d value');
+      expect(getFieldValue('e')(fields)).toEqual(false);
     });
   });
 
