@@ -4,7 +4,7 @@ import { Optional } from 'fputils';
 export const isGroupField = (field: FieldType): field is GroupProps => field.type === 'group';
 
 export const addFieldIntoGroup = (groupName: string, field: FieldType) => (fields: FieldType[]): FieldType[] => {
-  return fields.map(f => {
+  return fields.map((f) => {
     if (f.name === groupName) {
       return { ...f, fields: [...f.fields!, field] };
     }
@@ -35,7 +35,7 @@ export const renameField = (newName: string, currentName: string) => (field: Fie
   }
 
   if (isGroupField(field)) {
-    return { ...field, fields: field.fields.map(f => renameField(newName, currentName)(f)) };
+    return { ...field, fields: field.fields.map((f) => renameField(newName, currentName)(f)) };
   }
 
   return field;
@@ -55,7 +55,7 @@ export const removeField = (name: string, fields: FieldType[]): FieldType[] =>
   }, []);
 
 export const fieldExists = (name: string, fields: FieldType[]): boolean => {
-  const exists = fields.find(field => {
+  const exists = fields.find((field) => {
     if (field.name === name) {
       return true;
     }

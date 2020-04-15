@@ -11,7 +11,7 @@ const errorMessageLens = lensProp('errorMessage');
 
 export const isRequired = (validationRules: Validation[] = []): boolean => !!find(propEq('type', 'required'), validationRules);
 
-export const hasError = (fields: FieldType[]): boolean => !!find(field => (field.fields ? hasError(field.fields) : !!prop('errorMessage', field)), fields);
+export const hasError = (fields: FieldType[]): boolean => !!find((field) => (field.fields ? hasError(field.fields) : !!prop('errorMessage', field)), fields);
 
 const hasFieldError = (field: FieldType): boolean => !!prop('errorMessage', field);
 
@@ -46,22 +46,19 @@ const clearField = (field: FieldType): FieldType => {
 };
 
 export const validateForm = (fields: FieldType[]): FieldType[] =>
-  map(field => {
+  map((field) => {
     const error = validateField(getFormData(fields), field);
     if (isGroupField(field)) {
       return { ...field, fields: validateForm(field.fields) };
     }
 
-    return compose(
-      clearField,
-      set(errorMessageLens, error),
-    )(field);
+    return compose(clearField, set(errorMessageLens, error))(field);
   }, fields);
 
 type IUpdateField = (name: string | string[], fn: <Val>(value: Val) => Val, fields: FieldType[]) => FieldType[];
 
 const updateField: IUpdateField = (name, fn, fields): FieldType[] =>
-  map(field => {
+  map((field) => {
     if (field.name === name) {
       return fn(field);
     }
@@ -96,18 +93,18 @@ export interface Option<T> {
   label?: string;
 }
 
-export type SetFieldOptions = <Val>(name: string, options: Array<Option<Val>>, fields: FieldType[]) => FieldType[];
+export type SetFieldOptions = <Val>(name: string, options: Option<Val>[], fields: FieldType[]) => FieldType[];
 
 export interface SetFieldOptionsCurried {
-  <Val>(name: string, options: Array<Option<Val>>, fields: FieldType[]): FieldType[];
+  <Val>(name: string, options: Option<Val>[], fields: FieldType[]): FieldType[];
 
-  <Val>(name: string, options: Array<Option<Val>>): (fields: FieldType[]) => FieldType[];
+  <Val>(name: string, options: Option<Val>[]): (fields: FieldType[]) => FieldType[];
 }
 
 export const setFieldOptions: SetFieldOptionsCurried = curry<SetFieldOptions>((name, options, fields) => updateField(name, set(optionsLens, options), fields));
 
 export const update = ({ value, name, groupName }: UpdateActionType, fields: FieldType[]): FieldType[] =>
-  map(field => {
+  map((field) => {
     if (groupName && isGroupField(field)) {
       return { ...field, fields: update({ value, name, groupName }, field.fields) };
     } else if (field.name === name) {
@@ -118,7 +115,7 @@ export const update = ({ value, name, groupName }: UpdateActionType, fields: Fie
   }, fields);
 
 export const validate = ({ name }: ValidateActionType, fields: FieldType[]): FieldType[] => {
-  return map(field => {
+  return map((field) => {
     if (isGroupField(field)) {
       return { ...field, fields: validate({ name }, field.fields) };
     }
@@ -132,7 +129,7 @@ export const validate = ({ name }: ValidateActionType, fields: FieldType[]): Fie
 };
 
 export const updateAndValidate = ({ name, value, groupName }: UpdateAndValidateActionType, fields: FieldType[]): FieldType[] => {
-  return map(field => {
+  return map((field) => {
     if (groupName && isGroupField(field)) {
       return { ...field, fields: updateAndValidate({ name, value, groupName }, field.fields) };
     } else if (field.name === name) {

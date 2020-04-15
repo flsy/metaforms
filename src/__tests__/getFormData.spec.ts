@@ -20,7 +20,10 @@ describe('getFormData', () => {
       {
         name: 'groupA',
         type: 'group',
-        fields: [{ name: 'c', type: 'text', value: 'valueC' }, { name: 'd', type: 'text' }],
+        fields: [
+          { name: 'c', type: 'text', value: 'valueC' },
+          { name: 'd', type: 'text' },
+        ],
       },
     ];
 

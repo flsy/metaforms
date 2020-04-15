@@ -20,7 +20,7 @@ export interface UpdateAndValidateActionType {
 
 export interface CommonProps {
   name: string;
-
+  type: string;
   validation?: Validation[];
   label?: string;
   disabled?: boolean;
@@ -40,7 +40,7 @@ export interface CheckboxProps extends CommonProps {
 export interface SelectProps extends CommonProps {
   type: 'select';
   value?: string | number;
-  options?: Array<{ value: string | number; label?: string }>;
+  options?: { value: string | number; label?: string }[];
 }
 
 export interface InputProps extends CommonProps {

@@ -80,7 +80,10 @@ describe('utils', () => {
         {
           name: 'groupA',
           type: 'group',
-          fields: [{ name: 'c', type: 'text', validation: [required] }, { name: 'd', type: 'text' }],
+          fields: [
+            { name: 'c', type: 'text', validation: [required] },
+            { name: 'd', type: 'text' },
+          ],
         },
       ];
 
@@ -120,7 +123,10 @@ describe('utils', () => {
         {
           name: 'b',
           type: 'group',
-          fields: [{ name: 'c', type: 'text' }, { name: 'd', type: 'text' }],
+          fields: [
+            { name: 'c', type: 'text' },
+            { name: 'd', type: 'text' },
+          ],
         },
       ];
 
@@ -131,7 +137,10 @@ describe('utils', () => {
         {
           name: 'b',
           type: 'group',
-          fields: [{ name: 'c', type: 'text', value: 'value C' }, { name: 'd', type: 'text' }],
+          fields: [
+            { name: 'c', type: 'text', value: 'value C' },
+            { name: 'd', type: 'text' },
+          ],
         },
       ]);
     });
@@ -156,7 +165,10 @@ describe('utils', () => {
     });
 
     it('returns a field with options', () => {
-      const options: any = [{ value: 1, label: 'First' }, { value: 2, label: 'second' }];
+      const options: any = [
+        { value: 1, label: 'First' },
+        { value: 2, label: 'second' },
+      ];
       const field: FieldType = {
         name: 'name',
         type: 'select',
@@ -167,7 +179,10 @@ describe('utils', () => {
     });
 
     it('set options on nested field', () => {
-      const options: any = [{ value: 1, label: 'First' }, { value: 2, label: 'second' }];
+      const options: any = [
+        { value: 1, label: 'First' },
+        { value: 2, label: 'second' },
+      ];
       const fields: FieldType[] = [
         {
           type: 'group',
@@ -193,7 +208,10 @@ describe('utils', () => {
     });
 
     it('set options on nested field but not the last nested one', () => {
-      const options: any = [{ value: 1, label: 'First' }, { value: 2, label: 'second' }];
+      const options: any = [
+        { value: 1, label: 'First' },
+        { value: 2, label: 'second' },
+      ];
       const fields: FieldType[] = [
         {
           type: 'group',
@@ -243,7 +261,10 @@ describe('utils', () => {
         {
           name: 'groupA',
           type: 'group',
-          fields: [{ name: 'c', type: 'text' }, { name: 'd', type: 'text' }],
+          fields: [
+            { name: 'c', type: 'text' },
+            { name: 'd', type: 'text' },
+          ],
         },
       ];
 
@@ -253,7 +274,10 @@ describe('utils', () => {
         {
           name: 'groupA',
           type: 'group',
-          fields: [{ name: 'c', type: 'text', value }, { name: 'd', type: 'text' }],
+          fields: [
+            { name: 'c', type: 'text', value },
+            { name: 'd', type: 'text' },
+          ],
         },
       ];
 
@@ -271,7 +295,10 @@ describe('utils', () => {
             {
               name: 'groupD',
               type: 'group',
-              fields: [{ name: 'e', type: 'text' }, { name: 'f', type: 'text' }],
+              fields: [
+                { name: 'e', type: 'text' },
+                { name: 'f', type: 'text' },
+              ],
             },
           ],
         },
@@ -288,7 +315,10 @@ describe('utils', () => {
             {
               name: 'groupD',
               type: 'group',
-              fields: [{ name: 'e', type: 'text' }, { name: 'f', type: 'text', value }],
+              fields: [
+                { name: 'e', type: 'text' },
+                { name: 'f', type: 'text', value },
+              ],
             },
           ],
         },
@@ -346,7 +376,10 @@ describe('utils', () => {
         {
           name: 'groupA',
           type: 'group',
-          fields: [{ name: 'c', type: 'text' }, { name: 'd', type: 'text', validation }] as FieldType[],
+          fields: [
+            { name: 'c', type: 'text' },
+            { name: 'd', type: 'text', validation },
+          ] as FieldType[],
         },
       ];
 
@@ -355,7 +388,10 @@ describe('utils', () => {
         {
           name: 'groupA',
           type: 'group',
-          fields: [{ name: 'c', type: 'text' }, { name: 'd', type: 'text', validation, errorMessage }] as FieldType[],
+          fields: [
+            { name: 'c', type: 'text' },
+            { name: 'd', type: 'text', validation, errorMessage },
+          ] as FieldType[],
         },
       ];
 
