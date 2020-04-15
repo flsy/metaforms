@@ -31,11 +31,7 @@ describe('fields behaviour', () => {
   });
 
   it('returns errors when fields filled with wrong values', () => {
-    const filled = compose(
-      setFieldValue('name', 'Joel'),
-      setFieldValue('age', 'Joel'),
-      setFieldValue('born', 'xxx'),
-    )(fields);
+    const filled = compose(setFieldValue('name', 'Joel'), setFieldValue('age', 'Joel'), setFieldValue('born', 'xxx'))(fields);
 
     const result = validateForm(filled);
 
@@ -47,11 +43,7 @@ describe('fields behaviour', () => {
   });
 
   it('returns no errors when fields are properly filled', () => {
-    const filled = compose(
-      setFieldValue('name', 'Joel'),
-      setFieldValue('age', 50),
-      setFieldValue('born', '20'),
-    )(fields);
+    const filled = compose(setFieldValue('name', 'Joel'), setFieldValue('age', 50), setFieldValue('born', '20'))(fields);
 
     const result = validateForm(filled);
 
