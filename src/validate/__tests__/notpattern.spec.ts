@@ -31,14 +31,16 @@ describe('notpattern', () => {
           value: '[pP][aA][sS][sS][wW][oO][rR][dD]',
           message: 'invalid password',
         },
+      ),
+      notpattern(
         {
           value: '^\\S*$',
           message,
         },
       ),
     ];
-    const errorMessage = validateField({}, { value: 'hellothere', validation: multipleValidations });
 
-    expect(errorMessage).toEqual(multipleValidations[0].rules[1].message);
+    const errorMessage = validateField({}, { value: 'hellothere', validation: multipleValidations });
+    expect(errorMessage).toEqual(multipleValidations[1].message);
   });
 });

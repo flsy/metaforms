@@ -21,7 +21,11 @@ describe('maxlength', () => {
       {},
       {
         value: 'honza',
-        validation: [maxlength({ message: 'max 6 characters long', value: 6 }, { message: 'max 4 characters long', value: 4 }, { message: 'max 2 characters long', value: 2 })],
+        validation: [
+          maxlength({ message: 'max 6 characters long', value: 6 }),
+          maxlength({ message: 'max 4 characters long', value: 4 }),
+          maxlength({ message: 'max 2 characters long', value: 2 }),
+        ],
       },
     );
 

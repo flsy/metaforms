@@ -29,6 +29,8 @@ describe('pattern', () => {
           message: 'Sorry, your name can only include letters and spaces',
           value: "^[a-zA-Z \\'-]+$",
         },
+      ),
+      pattern(
         { message, value: '^\\S*$' },
       ),
     ];
