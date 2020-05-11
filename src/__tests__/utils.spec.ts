@@ -350,7 +350,7 @@ describe('utils', () => {
     const validation = [
       {
         type: 'required',
-        message: errorMessage
+        message: errorMessage,
       },
     ];
 

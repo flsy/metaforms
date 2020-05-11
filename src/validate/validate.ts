@@ -1,24 +1,8 @@
-import {
-  FormData,
-  InList,
-  MaxLength,
-  MinLength,
-  MustBeEqual,
-  MustMatch,
-  MustMatchCaseInsensitive,
-  Mustnotcontain,
-  NotPattern,
-  Optional,
-  Pattern,
-  Required,
-  Validation,
-  Value,
-} from './interfaces';
+import { FormData, InList, MaxLength, MinLength, MustBeEqual, MustMatch, MustMatchCaseInsensitive, Mustnotcontain, NotPattern, Optional, Pattern, Required, Validation, Value } from './interfaces';
 
 const isString = (value: Value): value is string => typeof value === 'string';
 
-const isEmpty = (value: Value, rule: Required): Optional<string> =>
-  value === null || value === undefined || value === '' ? rule.message : undefined;
+const isEmpty = (value: Value, rule: Required): Optional<string> => (value === null || value === undefined || value === '' ? rule.message : undefined);
 
 const getErrorIfDoesNotMatchRegEx = (value: Value, rule: Pattern): Optional<string> => {
   if (isString(value) && value.length > 0) {
@@ -34,20 +18,15 @@ const getErrorIfMatchesRegEx = (value: Value, rule: NotPattern): Optional<string
   return undefined;
 };
 
-const isNotEqualToExpectedValue = (value: Value, rule: MustBeEqual): Optional<string> =>
-  value !== rule.value ? rule.message : undefined;
+const isNotEqualToExpectedValue = (value: Value, rule: MustBeEqual): Optional<string> => (value !== rule.value ? rule.message : undefined);
 
-const isInList = (value: Value, rule: InList): Optional<string> =>
-  rule.value.indexOf(value) === -1 ? rule.message : undefined;
+const isInList = (value: Value, rule: InList): Optional<string> => (rule.value.indexOf(value) === -1 ? rule.message : undefined);
 
-const isGreaterThanMaxLength = (value: Value, rule: MaxLength): Optional<string> =>
-  isString(value) && value.length > rule.value ? rule.message : undefined;
+const isGreaterThanMaxLength = (value: Value, rule: MaxLength): Optional<string> => (isString(value) && value.length > rule.value ? rule.message : undefined);
 
-const isLessThanMinLength = (value: Value, rule: MinLength): Optional<string> =>
-  isString(value) && value.length < rule.value ? rule.message : undefined;
+const isLessThanMinLength = (value: Value, rule: MinLength): Optional<string> => (isString(value) && value.length < rule.value ? rule.message : undefined);
 
-const mustMatch = (value: Value, rule: MustMatch, formData: FormData): Optional<string> =>
-  formData[rule.value] && formData[rule.value] !== value ? rule.message : undefined;
+const mustMatch = (value: Value, rule: MustMatch, formData: FormData): Optional<string> => (formData[rule.value] && formData[rule.value] !== value ? rule.message : undefined);
 
 const mustNotContain = (value: Value, rule: Mustnotcontain, formData: FormData): Optional<string> => {
   const data = formData[rule.value];

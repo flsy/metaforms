@@ -24,15 +24,11 @@ describe('pattern', () => {
   it('should return the correct error when multiple rules are given', () => {
     const message = 'Sorry, your name cannot include spaces';
     const multipleValidations: Validation[] = [
-      pattern(
-        {
-          message: 'Sorry, your name can only include letters and spaces',
-          value: "^[a-zA-Z \\'-]+$",
-        },
-      ),
-      pattern(
-        { message, value: '^\\S*$' },
-      ),
+      pattern({
+        message: 'Sorry, your name can only include letters and spaces',
+        value: "^[a-zA-Z \\'-]+$",
+      }),
+      pattern({ message, value: '^\\S*$' }),
     ];
 
     const errorMessage = validateField({}, { value: 'John Smith', validation: multipleValidations });

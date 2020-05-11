@@ -1,6 +1,6 @@
 import { InList, MaxLength, MinLength, MustBeEqual, MustMatch, MustMatchCaseInsensitive, Mustnotcontain, NotPattern, Pattern, Required, Value } from './interfaces';
 
-type ValidationRule<T> = (args: Omit<T, 'type'>) => T
+type ValidationRule<T> = (args: Omit<T, 'type'>) => T;
 
 export const required = (message: string): Required => ({
   type: 'required',
@@ -10,53 +10,53 @@ export const required = (message: string): Required => ({
 export const minlength: ValidationRule<MinLength> = ({ message, value }) => ({
   type: 'minlength',
   message,
-  value
+  value,
 });
 
 export const maxlength: ValidationRule<MaxLength> = ({ message, value }) => ({
   type: 'maxlength',
   message,
-  value
+  value,
 });
 
 export const pattern: ValidationRule<Pattern> = ({ message, value }) => ({
   type: 'pattern',
   message,
-  value
+  value,
 });
 
 export const notpattern: ValidationRule<NotPattern> = ({ message, value }) => ({
   type: 'notpattern',
   message,
-  value
+  value,
 });
 
 export const mustnotcontain: ValidationRule<Mustnotcontain> = ({ message, value }) => ({
   type: 'mustnotcontain',
   message,
-  value
+  value,
 });
 
 export const mustmatch: ValidationRule<MustMatch> = ({ message, value }) => ({
   type: 'mustmatch',
   message,
-  value
+  value,
 });
 
 export const mustmatchcaseinsensitive: ValidationRule<MustMatchCaseInsensitive> = ({ message, value }) => ({
   type: 'mustmatchcaseinsensitive',
   message,
-  value
+  value,
 });
 
 export const mustbeequal: ValidationRule<MustBeEqual> = ({ message, value }) => ({
   type: 'mustbeequal',
   message,
-  value
+  value,
 });
 
 export const inList: ValidationRule<InList> = ({ message, value }): InList => ({
   type: 'inlist',
   message,
-  value
+  value,
 });
