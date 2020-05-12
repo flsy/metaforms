@@ -3,7 +3,7 @@ import { notpattern } from '../rules';
 import { validateField } from '../validate';
 
 describe('notpattern', () => {
-  const validation: Validation[] = [notpattern({ message: 'invalid password', value: '[pP][aA][sS][sS][wW][oO][rR][dD]' })];
+  const validation: Validation[] = [notpattern('invalid password', '[pP][aA][sS][sS][wW][oO][rR][dD]')];
 
   it('should not return an error if value is empty', () => {
     const errorMessage = validateField({}, { value: '', validation });
@@ -25,16 +25,7 @@ describe('notpattern', () => {
 
   it('should return the correct error when multiple rules are given', () => {
     const message = 'Sorry, your password must include spaces';
-    const multipleValidations: Validation[] = [
-      notpattern({
-        value: '[pP][aA][sS][sS][wW][oO][rR][dD]',
-        message: 'invalid password',
-      }),
-      notpattern({
-        value: '^\\S*$',
-        message,
-      }),
-    ];
+    const multipleValidations: Validation[] = [notpattern('invalid password', '[pP][aA][sS][sS][wW][oO][rR][dD]'), notpattern(message, '^\\S*$')];
 
     const errorMessage = validateField({}, { value: 'hellothere', validation: multipleValidations });
     expect(errorMessage).toEqual(multipleValidations[1].message);
