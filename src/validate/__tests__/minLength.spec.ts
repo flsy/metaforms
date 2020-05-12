@@ -3,7 +3,7 @@ import { minlength } from '../rules';
 import { validateField } from '../validate';
 
 describe('minlength', () => {
-  const validation: Validation[] = [minlength({ message: 'min 3 characters', value: 3 })];
+  const validation: Validation[] = [minlength('min 3 characters', 3)];
 
   it('should return an error if value has too few characters', () => {
     const errorMessage = validateField({}, { value: 'x', validation });

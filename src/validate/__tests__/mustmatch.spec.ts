@@ -3,7 +3,7 @@ import { mustmatch } from '../rules';
 import { validateField } from '../validate';
 
 describe('mustmatch', () => {
-  const validation: Validation[] = [mustmatch({ value: 'password', message: "The passwords you entered didn't match. Please try again" })];
+  const validation: Validation[] = [mustmatch("The passwords you entered didn't match. Please try again", 'password')];
 
   it('should return an error when the specified field values do not match', () => {
     const errorMessage = validateField({ password: 'bob' }, { value: 'joe12334', validation });

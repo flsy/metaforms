@@ -1,55 +1,62 @@
 import { InList, MaxLength, MinLength, MustBeEqual, MustMatch, MustMatchCaseInsensitive, Mustnotcontain, NotPattern, Pattern, Required, Value } from './interfaces';
 
+type ValidationRule<T extends { value: Value[] | Value | number }> = (message: string, value: T['value']) => T;
+
 export const required = (message: string): Required => ({
   type: 'required',
-  rules: [
-    {
-      message,
-    },
-  ],
+  message,
 });
 
-export const minlength = (...rules: { message: string; value: number }[]): MinLength => ({
+export const minlength: ValidationRule<MinLength> = (message, value) => ({
   type: 'minlength',
-  rules,
+  message,
+  value,
 });
 
-export const maxlength = (...rules: { message: string; value: number }[]): MaxLength => ({
+export const maxlength: ValidationRule<MaxLength> = (message, value) => ({
   type: 'maxlength',
-  rules,
+  message,
+  value,
 });
 
-export const pattern = (...rules: { message: string; value: string }[]): Pattern => ({
+export const pattern: ValidationRule<Pattern> = (message, value) => ({
   type: 'pattern',
-  rules,
+  message,
+  value,
 });
 
-export const notpattern = (...rules: { message: string; value: string }[]): NotPattern => ({
+export const notpattern: ValidationRule<NotPattern> = (message, value) => ({
   type: 'notpattern',
-  rules,
+  message,
+  value,
 });
 
-export const mustnotcontain = (...rules: { message: string; value: string }[]): Mustnotcontain => ({
+export const mustnotcontain: ValidationRule<Mustnotcontain> = (message, value) => ({
   type: 'mustnotcontain',
-  rules,
+  message,
+  value,
 });
 
-export const mustmatch = (...rules: { message: string; value: string }[]): MustMatch => ({
+export const mustmatch: ValidationRule<MustMatch> = (message, value) => ({
   type: 'mustmatch',
-  rules,
+  message,
+  value,
 });
 
-export const mustmatchcaseinsensitive = (...rules: { message: string; value: string }[]): MustMatchCaseInsensitive => ({
+export const mustmatchcaseinsensitive: ValidationRule<MustMatchCaseInsensitive> = (message, value) => ({
   type: 'mustmatchcaseinsensitive',
-  rules,
+  message,
+  value,
 });
 
-export const mustbeequal = (...rules: { message: string; value: Value }[]): MustBeEqual => ({
+export const mustbeequal: ValidationRule<MustBeEqual> = (message, value) => ({
   type: 'mustbeequal',
-  rules,
+  message,
+  value,
 });
 
-export const inList = (...rules: { message: string; value: Value[] }[]): InList => ({
+export const inList: ValidationRule<InList> = (message, value): InList => ({
   type: 'inlist',
-  rules,
+  message,
+  value,
 });

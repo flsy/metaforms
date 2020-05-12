@@ -33,7 +33,7 @@ describe('utils', () => {
           validation: [
             {
               type: 'required',
-              rules: [{ message }],
+              message,
             },
           ],
         },
@@ -58,12 +58,8 @@ describe('utils', () => {
             },
             {
               type: 'minlength',
-              rules: [
-                {
-                  value: 3,
-                  message: 'min 3 characters',
-                },
-              ],
+              value: 3,
+              message: 'min 3 characters',
             },
           ],
         },
@@ -73,7 +69,7 @@ describe('utils', () => {
     });
 
     it('validates a nested fields', () => {
-      const required: Required = { type: 'required', rules: [{ message }] };
+      const required: Required = { type: 'required', message };
       const fields: FieldType[] = [
         { name: 'a', type: 'text', validation: [] },
         { name: 'b', type: 'text', validation: [required] },
@@ -354,7 +350,7 @@ describe('utils', () => {
     const validation = [
       {
         type: 'required',
-        rules: [{ message: errorMessage }],
+        message: errorMessage,
       },
     ];
 
