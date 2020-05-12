@@ -3,7 +3,7 @@ import { validateField } from '../validate';
 
 describe('mustnotcontain', () => {
   const message = 'Please enter a valid password, it can`t contain your username';
-  const validation = [mustnotcontain({ message, value: 'username' })];
+  const validation = [mustnotcontain(message, 'username')];
 
   it('returns error when it contains', () => {
     const errorMessage = validateField({ username: 'Honza' }, { value: 'MyHonza', validation });

@@ -2,7 +2,7 @@ import { maxlength } from '../rules';
 import { validateField } from '../validate';
 
 describe('maxlength', () => {
-  const validation = [maxlength({ message: 'max 5 characters long', value: 5 })];
+  const validation = [maxlength('max 5 characters long', 5)];
 
   it('should return an error if the entered text exceeds the max length rule', () => {
     const errorMessage = validateField({}, { value: 'honzaxx', validation });
@@ -21,7 +21,7 @@ describe('maxlength', () => {
       {},
       {
         value: 'honza',
-        validation: [maxlength({ message: 'max 6 characters long', value: 6 }, { message: 'max 4 characters long', value: 4 }, { message: 'max 2 characters long', value: 2 })],
+        validation: [maxlength('max 6 characters long', 6), maxlength('max 4 characters long', 4), maxlength('max 2 characters long', 2)],
       },
     );
 

@@ -10,12 +10,12 @@ const fields: FieldType[] = [
   {
     type: 'number',
     name: 'age',
-    validation: [required('fill age'), maxlength({ message: 'max 3 digits', value: 3 })],
+    validation: [required('fill age'), maxlength('max 3 digits', 3)],
   },
   {
     type: 'datetime-local',
     name: 'born',
-    validation: [required('fill DOB'), pattern({ message: 'wrong date format', value: '^[0-9]+$' })],
+    validation: [required('fill DOB'), pattern('wrong date format', '^[0-9]+$')],
   },
 ];
 
