@@ -30,8 +30,10 @@ describe('getFormData', () => {
     const expected = {
       a: undefined,
       b: 'valueB',
-      c: 'valueC',
-      d: undefined,
+      groupA: {
+        c: 'valueC',
+        d: undefined,
+      },
     };
     expect(getFormData(fields)).toEqual(expected);
   });
