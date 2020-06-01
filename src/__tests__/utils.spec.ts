@@ -126,7 +126,7 @@ describe('utils', () => {
         },
       ];
 
-      const updated = setFieldValue('c', 'value C', fields);
+      const updated = setFieldValue(['b', 'c'], 'value C', fields);
 
       expect(updated).toEqual([
         { name: 'a', type: 'text' },
@@ -135,6 +135,34 @@ describe('utils', () => {
           type: 'group',
           fields: [
             { name: 'c', type: 'text', value: 'value C' },
+            { name: 'd', type: 'text' },
+          ],
+        },
+      ]);
+    });
+
+    it("shouldn't set a value to nested field without groupName", () => {
+      const fields: FieldType[] = [
+        { name: 'a', type: 'text' },
+        {
+          name: 'b',
+          type: 'group',
+          fields: [
+            { name: 'c', type: 'text' },
+            { name: 'd', type: 'text' },
+          ],
+        },
+      ];
+
+      const updated = setFieldValue('c', 'value C', fields);
+
+      expect(updated).toEqual([
+        { name: 'a', type: 'text' },
+        {
+          name: 'b',
+          type: 'group',
+          fields: [
+            { name: 'c', type: 'text' },
             { name: 'd', type: 'text' },
           ],
         },
@@ -339,8 +367,8 @@ describe('utils', () => {
 
       expect(getFieldValue<string>('a', fields)).toEqual('a value');
       expect(getFieldValue('b', fields)).toEqual(undefined);
-      expect(getFieldValue('c', fields)).toEqual(undefined);
-      expect(getFieldValue('d')(fields)).toEqual('d value');
+      expect(getFieldValue('c', fields)).toEqual({ d: 'd value' });
+      expect(getFieldValue('d')(fields)).toEqual(undefined);
       expect(getFieldValue('e')(fields)).toEqual(false);
     });
   });
