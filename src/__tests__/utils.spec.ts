@@ -219,6 +219,26 @@ describe('utils', () => {
                 {
                   name: 'select-1',
                   type: 'select',
+                  options: [],
+                },
+              ],
+            },
+          ],
+        },
+      ];
+
+      const resultFields: FieldType[] = [
+        {
+          type: 'group',
+          name: 'groups',
+          fields: [
+            {
+              type: 'group',
+              name: 'group-1',
+              fields: [
+                {
+                  name: 'select-1',
+                  type: 'select',
                   options,
                 },
               ],
@@ -227,8 +247,8 @@ describe('utils', () => {
         },
       ];
 
-      const result = setFieldOptions('select-1', options, fields);
-      expect(result).toEqual(fields);
+      const result = setFieldOptions(['groups', 'group-1', 'select-1'], options, fields);
+      expect(result).toEqual(resultFields);
     });
 
     it('set options on nested field but not the last nested one', () => {
