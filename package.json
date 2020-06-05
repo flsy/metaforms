@@ -40,7 +40,7 @@
     "ts-jest": "25.5.1",
     "tslint": "6.1.2",
     "tslint-config-prettier": "1.18.0",
-    "typescript": "3.9.3"
+    "typescript": "3.9.5"
   },
   "jest": {
     "transform": {
