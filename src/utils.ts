@@ -107,12 +107,12 @@ export interface SetFieldOptionsCurried {
 
 export const setFieldOptions: SetFieldOptionsCurried = curry<SetFieldOptions>((name, options, fields) => updateField(name, set(optionsLens, options), fields));
 
-type SetFieldValues = (name: string | string[], value: number[], fields: FieldType[]) => FieldType[];
+type SetFieldValues = (name: string | string[], value: number[] | string[], fields: FieldType[]) => FieldType[];
 
 export interface SetFieldValuesCurried {
-  (name: string | string[], value: number[], fields: FieldType[]): FieldType[];
+  (name: string | string[], value: number[] | string[], fields: FieldType[]): FieldType[];
 
-  (name: string | string[], value: number[]): (fields: FieldType[]) => FieldType[];
+  (name: string | string[], value: number[] | string[]): (fields: FieldType[]) => FieldType[];
 }
 
 export const setFieldValues: SetFieldValuesCurried = curry<SetFieldValues>((name, value, fields): FieldType[] => updateField(name, set(valuesLens, value), fields));
