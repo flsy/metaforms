@@ -1,6 +1,21 @@
-import { FormData, InList, MaxLength, MinLength, MustBeEqual, MustMatch, MustMatchCaseInsensitive, Mustnotcontain, NotPattern, Optional, Pattern, Required, Validation, Value } from './interfaces';
+import { FormData, InList, IsNumber, Max, MaxLength, Min, MinLength, MustBeEqual, MustMatch, MustMatchCaseInsensitive, Mustnotcontain, NotPattern, Optional, Pattern, Required, Validation, Value } from './interfaces';
 
 const isString = (value: Value): value is string => typeof value === 'string';
+const isNumber = (value: Value): value is number => typeof value === 'number';
+const parseNumber = (value: Value): Optional<number> => {
+  if (!value) {
+    return undefined;
+  }
+
+  if (isString(value)) {
+    return parseInt(value, 10);
+  }
+
+  if (isNumber(value)) {
+    return value;
+  }
+  return undefined;
+};
 
 const isEmpty = (value: Value, rule: Required): Optional<string> => (value === null || value === undefined || value === '' ? rule.message : undefined);
 
@@ -17,6 +32,26 @@ const getErrorIfMatchesRegEx = (value: Value, rule: NotPattern): Optional<string
   }
   return undefined;
 };
+
+const isLessThanMin = (value: Value, rule: Min): Optional<string> => {
+  const parsedNumber = parseNumber(value);
+  if (!parsedNumber) {
+    return undefined;
+  }
+
+  return parsedNumber < rule.value ? rule.message : undefined;
+};
+
+const isGreaterThanMax = (value: Value, rule: Max): Optional<string> => {
+  const parsedNumber = parseNumber(value);
+  if (!parsedNumber) {
+    return undefined;
+  }
+
+  return parsedNumber > rule.value ? rule.message : undefined;
+};
+
+const validateIsNumber = (value: Value, rule: IsNumber): Optional<string> => (value && !isNumber(value) ? rule.message : undefined);
 
 const isNotEqualToExpectedValue = (value: Value, rule: MustBeEqual): Optional<string> => (value !== rule.value ? rule.message : undefined);
 
@@ -78,6 +113,15 @@ export const validateField = (formData: FormData, field: IField): Optional<strin
 
         case 'mustnotcontain':
           return mustNotContain(field.value, rule, formData);
+
+        case 'min':
+          return isLessThanMin(field.value, rule);
+
+        case 'max':
+          return isGreaterThanMax(field.value, rule);
+
+        case 'isNumber':
+          return validateIsNumber(field.value, rule);
 
         default:
           return undefined;
