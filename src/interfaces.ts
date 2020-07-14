@@ -1,6 +1,6 @@
 import { Validation, Value } from './validate/interfaces';
 
-export type FieldType = InputProps | TextAreaProps | CheckboxProps | SelectProps | ButtonProps | SubmitProps | GroupProps;
+export type FieldType = InputProps | TextAreaProps | CheckboxProps | SelectProps | ButtonProps | SubmitProps | GroupProps | NumberProps;
 
 export interface UpdateActionType {
   name: string;
@@ -44,8 +44,15 @@ export interface SelectProps extends CommonProps {
 }
 
 export interface InputProps extends CommonProps {
-  type: 'text' | 'password' | 'email' | 'number' | 'hidden' | 'date' | 'datetime-local';
+  type: 'text' | 'password' | 'email' | 'hidden' | 'date' | 'datetime-local';
   value?: string | number | Date;
+}
+
+export interface NumberProps extends CommonProps {
+  type: 'number';
+  value?: number;
+  min?: number;
+  max?: number;
 }
 
 export interface TextAreaProps extends CommonProps {

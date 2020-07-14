@@ -10,6 +10,23 @@ export interface Required {
   message: string;
 }
 
+export interface Min {
+  type: 'min';
+  value: number;
+  message: string;
+}
+
+export interface Max {
+  type: 'max';
+  value: number;
+  message: string;
+}
+
+export interface IsNumber {
+  type: 'isNumber';
+  message: string;
+}
+
 export interface MinLength {
   type: 'minlength';
   value: number;
@@ -64,4 +81,4 @@ export interface MustMatchCaseInsensitive {
   message: string;
 }
 
-export type Validation = InList | MustBeEqual | Required | MinLength | MaxLength | Pattern | NotPattern | Mustnotcontain | MustMatch | MustMatchCaseInsensitive;
+export type Validation = InList | MustBeEqual | Required | MinLength | MaxLength | Pattern | NotPattern | Mustnotcontain | MustMatch | MustMatchCaseInsensitive | Min | Max | IsNumber;
