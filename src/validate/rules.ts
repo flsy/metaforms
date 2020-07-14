@@ -1,17 +1,4 @@
-import {
-  InList, IsNumber, Max,
-  MaxLength,
-  Min,
-  MinLength,
-  MustBeEqual,
-  MustMatch,
-  MustMatchCaseInsensitive,
-  Mustnotcontain,
-  NotPattern,
-  Pattern,
-  Required,
-  Value,
-} from './interfaces';
+import { InList, IsNumber, Max, MaxLength, Min, MinLength, MustBeEqual, MustMatch, MustMatchCaseInsensitive, Mustnotcontain, NotPattern, Pattern, Required, Value } from './interfaces';
 
 type ValidationRule<T extends { value: Value[] | Value | number }> = (message: string, value: T['value']) => T;
 
@@ -30,7 +17,7 @@ export const max: ValidationRule<Max> = (message, value) => ({
   type: 'max',
   message,
   value,
-})
+});
 
 export const isNumber = (message: string): IsNumber => ({
   type: 'isNumber',

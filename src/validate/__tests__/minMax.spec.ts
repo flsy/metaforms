@@ -50,5 +50,4 @@ describe('max', () => {
 
     expect(errorMessage).toEqual(undefined);
   });
-
 });
