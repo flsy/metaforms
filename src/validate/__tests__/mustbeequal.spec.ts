@@ -1,9 +1,8 @@
-import { Validation } from '../interfaces';
 import { mustbeequal } from '../rules';
 import { validateField } from '../validate';
 
 describe('mustbeequal', () => {
-  const validation: Validation[] = [mustbeequal('You need to agree to the terms and conditions', true)];
+  const validation = [mustbeequal('You need to agree to the terms and conditions', true)];
 
   it('should return an error if the value is not equal to the specified value', () => {
     const errorMessage = validateField({}, { value: false, validation });

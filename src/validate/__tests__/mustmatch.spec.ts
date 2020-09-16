@@ -1,9 +1,8 @@
-import { Validation } from '../interfaces';
 import { mustmatch } from '../rules';
 import { validateField } from '../validate';
 
 describe('mustmatch', () => {
-  const validation: Validation[] = [mustmatch("The passwords you entered didn't match. Please try again", 'password')];
+  const validation = [mustmatch("The passwords you entered didn't match. Please try again", 'password')];
 
   it('should return an error when the specified field values do not match', () => {
     const errorMessage = validateField({ password: 'bob' }, { value: 'joe12334', validation });

@@ -4,37 +4,35 @@ A tool for building and managing forms in simple JSON format.
 
 ## usage:
 ```typescript
-import { hasError, pattern, required, setFieldValue, validateForm } from "metaforms";
+import { hasError, setFieldValue, validateForm } from "metaforms";
 
 // An example of login form, which is serialized as JSON object for easier manipulation
-const loginForm = [
-  {
-    name: "email",
+const loginForm = {
+  email: {
     type: "email",
     label: "Email",
     placeholder: "Enter your email address",
     value: "",
     validation: [
-      required("Please enter your email address"),
-      pattern("Sorry, we do not recognise that email address, please check and try again", "^.*@.*\\..*$")
+      { type: "required", message: "Please enter your email address" },
+      { type: "pattern", message: "Sorry, we do not recognise that email address", value: "^.*@.*\\..*$" }
     ]
   },
-  {
-    name: "password",
+  password: {
     type: "password",
     label: "Password",
     value: "",
-    validation: [required("Please enter your password")]
+    validation: [
+      { type: "required", message: "Please enter your password" },
+    ]
   },
-  {
-    name: "submit",
+  submit: {
     type: "submit",
     label: "Login"
   }
-];
+};
 
 // which we can then take and fill with values:
-
 const formWithValues = compose(
   validateForm,
   setFieldValue("email", "my@email.com"),
@@ -42,13 +40,14 @@ const formWithValues = compose(
 )(loginForm);
 
 
-// and check if it has any errors
+// or read the values
+getFormData(formWithValues); // will produce: { email: "my@email.com", password: "pass#or!" }
+ 
 
+// or check if the form has any errors
 if (hasError(formWithValues)) {
-  ...
-  // if does we can remove sensitive values and send it back to frontend
+  // if does, we can remove sensitive values and send it back to frontend of our app
   const formToReturn = setFieldValue("password", "", formWithValues);
-  ...;
 }
 ```
 

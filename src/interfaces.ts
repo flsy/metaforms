@@ -1,80 +1,84 @@
-import { Validation, Value } from './validate/interfaces';
+import { Validation } from './validate/interfaces';
 
-export type FieldType = InputProps | TextAreaProps | CheckboxProps | SelectProps | ButtonProps | SubmitProps | GroupProps | NumberProps;
-
-export interface UpdateActionType {
-  name: string;
-  value: Value;
-  groupName?: string;
-}
-
-export interface ValidateActionType {
-  name: string;
-}
-
-export interface UpdateAndValidateActionType {
-  name: string;
-  value: Value;
-  groupName?: string;
-}
-
-export interface CommonProps {
-  name: string;
+interface CommonProps {
   type: string;
   validation?: Validation[];
   label?: string;
   disabled?: boolean;
   readOnly?: boolean;
   errorMessage?: string;
-  groupName?: string;
   placeholder?: string;
   inputMode?: 'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search';
-  fields?: FieldType[];
 }
 
-export interface CheckboxProps extends CommonProps {
+export interface CheckboxInput extends CommonProps {
   type: 'checkbox';
   value?: boolean;
 }
 
-export interface SelectProps extends CommonProps {
-  type: 'select';
-  value?: string | number;
-  options?: { value: string | number; label?: string }[];
-}
+// export interface SelectInput extends CommonProps {
+//   type: 'select';
+//   value?: string | number;
+//   options?: { value: string | number; label?: string }[];
+// }
 
 export interface InputProps extends CommonProps {
   type: 'text' | 'password' | 'email' | 'hidden' | 'date' | 'datetime-local';
-  value?: string | number | Date;
+  value?: string;
 }
 
-export interface NumberProps extends CommonProps {
+export interface TextField extends CommonProps {
+  type: 'text';
+  value?: string;
+}
+
+export interface PasswordField extends CommonProps {
+  type: 'password';
+  value?: string;
+}
+
+export interface NumberField extends CommonProps {
   type: 'number';
   value?: number;
   min?: number;
   max?: number;
 }
 
-export interface TextAreaProps extends CommonProps {
+export interface TextAreaField extends CommonProps {
   type: 'textarea';
   value?: string;
 }
 
-export interface ButtonProps extends CommonProps {
-  type: 'button';
-  value?: string;
-  label: string;
-}
-
-export interface SubmitProps extends CommonProps {
-  type: 'submit';
-  value?: string;
-}
-
-export interface GroupProps extends CommonProps {
+export interface GroupField<T extends { [name: string]: { type: string } }> {
   type: 'group';
-  name: string;
-  value?: string;
   legend?: string;
-  fields: FieldType[];
+  fields: T;
 }
+
+export interface ButtonField {
+  type: 'button';
+  label?: string;
+  disabled?: boolean;
+}
+
+export interface SubmitField {
+  type: 'submit';
+  label?: string;
+  disabled?: boolean;
+}
+
+export type Form<T extends { [name: string]: { type: string } }> = T;
+
+export interface FieldBody<Value = unknown> {
+  type: string;
+  fields?: Field;
+  value?: Value;
+  errorMessage?: string;
+  validation?: Validation[];
+}
+
+export interface Field {
+  [name: string]: FieldBody<unknown>;
+}
+
+export type FormData<T extends Field> = { [key in keyof T]: T[key]['fields'] extends object ? FormData<T[key]['fields']> : T[key]['value'] };

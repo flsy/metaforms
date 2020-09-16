@@ -1,40 +1,83 @@
 import { getFormData } from '../utils';
-import { FieldType } from '../interfaces';
+import { Form, GroupField, NumberField, SubmitField, TextField } from '../interfaces';
 
 describe('getFormData', () => {
-  it('returns formData from fields', () => {
-    expect(getFormData([])).toEqual({});
+  it('returns form data', () => {
+    type MyForm = Form<{ name: TextField; detailed: GroupField<{ age: NumberField; emptyGroup: GroupField<{}> }>; submit: SubmitField }>;
 
-    const fields1: FieldType[] = [{ name: 'field1', type: 'text' }];
-    expect(getFormData(fields1)).toEqual({ field1: undefined });
+    const form1: MyForm = {
+      name: {
+        type: 'text',
+        value: 'default value',
+      },
+      detailed: {
+        type: 'group',
+        fields: {
+          age: {
+            type: 'number',
+            value: 18,
+          },
+          emptyGroup: {
+            type: 'group',
+            fields: {
+              d: {
+                type: 'text',
+              },
+            },
+          },
+        },
+      },
+      submit: {
+        type: 'submit',
+      },
+    };
 
-    expect(getFormData([{ type: 'text', name: 'field1', value: 'some value' }] as FieldType[])).toEqual({
-      field1: 'some value',
+    const data = getFormData(form1);
+    expect(data).toEqual({
+      name: 'default value',
+      detailed: {
+        age: 18,
+      },
     });
   });
 
-  it('returns formData from nested fields', () => {
-    const fields: FieldType[] = [
-      { name: 'a', type: 'text' },
-      { name: 'b', type: 'text', value: 'valueB' },
-      {
-        name: 'groupA',
-        type: 'group',
-        fields: [
-          { name: 'c', type: 'text', value: 'valueC' },
-          { name: 'd', type: 'text' },
-        ],
-      },
-    ];
+  it('returns form data from custom fields', () => {
+    interface NumberValuesField {
+      type: 'numberValues';
+      value: number[];
+    }
 
-    const expected = {
-      a: undefined,
-      b: 'valueB',
-      groupA: {
-        c: 'valueC',
-        d: undefined,
+    type MyForm = Form<{ myCustom: NumberValuesField; myGroup: GroupField<{ myCustomNested: NumberValuesField; inGroup: TextField }>; submit: SubmitField }>;
+
+    const form1: MyForm = {
+      myCustom: {
+        type: 'numberValues',
+        value: [1, 8],
+      },
+      myGroup: {
+        type: 'group',
+        fields: {
+          myCustomNested: {
+            type: 'numberValues',
+            value: [10],
+          },
+          inGroup: {
+            type: 'text',
+            value: 'group value',
+          },
+        },
+      },
+      submit: {
+        type: 'submit',
       },
     };
-    expect(getFormData(fields)).toEqual(expected);
+
+    expect(getFormData(form1)).toEqual({
+      myCustom: [1, 8],
+      myGroup: {
+        inGroup: 'group value',
+        myCustomNested: [10],
+      },
+    });
   });
 });
