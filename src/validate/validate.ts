@@ -78,7 +78,7 @@ const mustMatchCaseInsensitive = <Value, Form extends Field>(value: Value, rule:
   return isString(value) && isString(target) && !equalIgnoreCase(target, value) ? rule.message : undefined;
 };
 
-export const validateField = <T extends Field, Value = unknown>(formData: FormData<T>, field: Partial<FieldBody<Value>>): Optional<string> => {
+export const validateField = <T extends Field, Value = unknown>(formData: FormData<T>, field: Partial<FieldBody>): Optional<string> => {
   const errorMessages = (field.validation || [])
     .map((rule) => {
       switch (rule.type) {
