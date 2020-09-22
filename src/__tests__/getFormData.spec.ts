@@ -1,5 +1,6 @@
 import { getFormData } from '../utils';
-import { Form, GroupField, NumberField, SubmitField, TextField } from '../interfaces';
+import { Form } from '../interfaces';
+import { GroupField, NumberField, SubmitField, TextField } from '../testInterfaces';
 
 describe('getFormData', () => {
   it('returns form data', () => {

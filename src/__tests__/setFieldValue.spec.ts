@@ -1,5 +1,6 @@
 import { setFieldValue } from '../utils';
-import { Form, GroupField, NumberField, TextField } from '../interfaces';
+import { Form } from '../interfaces';
+import { GroupField, NumberField, TextField } from '../testInterfaces';
 
 describe('setFieldValue', () => {
   it('set the value on simple path', () => {
