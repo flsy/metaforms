@@ -1,4 +1,5 @@
-import { Form, GroupField, TextField } from '../interfaces';
+import { Form } from '../interfaces';
+import { GroupField, TextField } from '../testInterfaces';
 import { addFieldIntoGroup } from '../utils';
 
 const field1: TextField = {

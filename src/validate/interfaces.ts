@@ -1,4 +1,5 @@
 export type Optional<T> = T | undefined;
+export type ValueOf<T> = T[keyof T];
 
 export interface Required {
   type: 'required';

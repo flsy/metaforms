@@ -145,9 +145,9 @@ describe('utils', () => {
 
       const differentFields: Form<any> = { b: { type: 'text' } };
 
-      expect(update(name, value, differentFields)).toEqual(differentFields);
+      expect(update('a', value, differentFields)).toEqual(differentFields);
 
-      expect(update(name, value, { a: { type: 'text' } })).toEqual({ a: { type: 'text', value } });
+      expect(update('a', value, { a: { type: 'text' } })).toEqual({ a: { type: 'text', value } });
     });
 
     it('updates a grouped structure', () => {

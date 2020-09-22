@@ -1,5 +1,5 @@
 import { find, head, Optional, propEq } from 'fputils';
-import { Validation } from './validate/interfaces';
+import { Validation, ValueOf } from './validate/interfaces';
 import { Field, FieldBody, Form, FormData } from './interfaces';
 import { validateField } from './validate/validate';
 import { required } from './validate/rules';
@@ -41,8 +41,8 @@ export const getFormData = <T extends Field>(form: Form<T>): FormData<T> =>
     return all;
   }, {} as FormData<any>);
 
-const updateFunction = <D extends { type: string; fields?: any }, R extends D>(name: string | string[], fn: (field: D) => R) => (form: Form<{ [name: string]: D }>): Form<{ [name: string]: R }> =>
-  Object.entries(form).reduce((all, [key, field]) => {
+const updateFunction = <D extends Field>(name: keyof D | string[], fn: (field: FieldBody) => FieldBody) => (form: Form<D>): Form<D> =>
+  Object.entries(form).reduce<D>((all, [key, field]) => {
     if (Array.isArray(name)) {
       if (name.length === 1 && key === name[0]) {
         return { ...all, [key]: { ...field, ...fn(field) } };
@@ -56,7 +56,7 @@ const updateFunction = <D extends { type: string; fields?: any }, R extends D>(n
       return { ...all, [key]: { ...field, ...fn(field) } };
     }
     return { ...all, [key]: field };
-  }, {});
+  }, {} as any) as any;
 
 export const setFieldOptions = <Option>(name: string | string[], options: Option[]) => updateFunction(name, (field) => ({ ...field, options }));
 export const setFieldValue = <Value>(name: string | string[], value: Value) => updateFunction(name, (field) => ({ ...field, value }));
