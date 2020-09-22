@@ -1,156 +1,102 @@
-import { assoc, compose, curry, find, foldr, head, lensProp, map, prop, propEq, set, view } from 'fputils';
-import { Optional, Validation } from './validate/interfaces';
-import { FieldType, UpdateActionType, UpdateAndValidateActionType, ValidateActionType } from './interfaces';
+import { find, head, Optional, propEq } from 'fputils';
+import { Validation } from './validate/interfaces';
+import { Field, FieldBody, Form, FormData } from './interfaces';
 import { validateField } from './validate/validate';
-import { isGroupField } from './helpers';
 import { required } from './validate/rules';
-
-const valueLens = lensProp('value');
-const optionsLens = lensProp('options');
-const valuesLens = lensProp('values');
-const errorMessageLens = lensProp('errorMessage');
 
 export const isRequired = (validationRules: Validation[] = []): boolean => !!find(propEq('type', 'required'), validationRules);
 
-export const hasError = (fields: FieldType[]): boolean => !!find((field) => (field.fields ? hasError(field.fields) : !!prop('errorMessage', field)), fields);
+const fieldNameWithError = <T extends Field>(form: Form<T>): Optional<string> => Object.keys(form).find((name) => form[name].errorMessage);
+const fieldNameWithoutValue = <T extends Field>(form: Form<T>): Optional<string> => Object.keys(form).find((name) => !form[name].value);
 
-const hasFieldError = (field: FieldType): boolean => !!prop('errorMessage', field);
-
-const findFieldWithError = (fields: FieldType[]) => find(hasFieldError, fields);
-
-export const shouldComponentFocus = (fields: FieldType[]): Optional<string> => {
-  const errorField = findFieldWithError(fields);
+/**
+ * returns a name of field
+ * @param form
+ */
+export const shouldComponentFocus = <T extends Field>(form: Form<T>): Optional<string> => {
+  const errorField = fieldNameWithError(form);
   if (errorField) {
-    return errorField.name;
+    return errorField;
   }
 
-  // todo: find first empty field
-  const firstField = head(fields);
-  return firstField && firstField.name;
+  return fieldNameWithoutValue(form);
 };
 
-export const getFormData = <Name extends FieldType['name']>(fields: FieldType[]): { [key in Name]: FieldType['value'] } =>
-  foldr((field, all) => (field.fields ? { ...all, [field.name]: getFormData(field.fields) } : assoc(field.name, field.value, all)), {}, fields);
+/**
+ *
+ * @param {Form} form
+ */
+export const getFormData = <T extends Field>(form: Form<T>): FormData<T> =>
+  Object.entries<FieldBody>(form).reduce<FormData<T>>((all, [name, field]) => {
+    if (field.fields) {
+      const nested = getFormData(field.fields);
+      if (Object.keys(nested).length) {
+        return { ...all, [name]: nested };
+      }
+      return { ...all };
+    }
+    if (field.value) {
+      return { ...all, [name]: field.value };
+    }
+    return all;
+  }, {} as FormData<any>);
 
-const clearField = (field: FieldType): FieldType => {
-  if (propEq('errorMessage', null, field)) {
-    const { errorMessage, ...rest } = field;
-    return rest;
-  }
+const updateFunction = <D extends { type: string; fields?: any }, R extends D>(name: string | string[], fn: (field: D) => R) => (form: Form<{ [name: string]: D }>): Form<{ [name: string]: R }> =>
+  Object.entries(form).reduce((all, [key, field]) => {
+    if (Array.isArray(name)) {
+      if (name.length === 1 && key === name[0]) {
+        return { ...all, [key]: { ...field, ...fn(field) } };
+      }
+      if (name.length > 1 && key === name[0] && field.fields) {
+        const [, ...rest] = name;
+        return { ...all, [key]: { ...field, fields: updateFunction(rest, fn)(field.fields) } };
+      }
+    }
+    if (key === name) {
+      return { ...all, [key]: { ...field, ...fn(field) } };
+    }
+    return { ...all, [key]: field };
+  }, {});
 
-  if (propEq('errorMessage', undefined, field)) {
-    const { errorMessage, ...rest } = field;
-    return rest;
-  }
+export const setFieldOptions = <Option>(name: string | string[], options: Option[]) => updateFunction(name, (field) => ({ ...field, options }));
+export const setFieldValue = <Value>(name: string | string[], value: Value) => updateFunction(name, (field) => ({ ...field, value }));
+export const setFieldValues = (name: string | string[], values: number[] | string[]) => updateFunction(name, (field) => ({ ...field, values }));
 
-  return field;
+export const addFieldIntoGroup = <T extends { [name: string]: { type: string; fields?: Form<T> } }, F extends { type: string }>(groupName: string, newFieldName: string, newField: F) => (form: Form<T>): Form<T> => {
+  return Object.entries(form).reduce((all, [key, field]) => {
+    if ('fields' in field) {
+      if (key === groupName) {
+        return { ...all, [key]: { ...field, fields: { ...field.fields, [newFieldName]: newField } } };
+      }
+      return { ...all, [key]: { ...field, fields: addFieldIntoGroup(groupName, newFieldName, newField)(field.fields as any) } };
+    }
+    return { ...all, [key]: field };
+  }, {} as Form<T>);
 };
 
-export const validateForm = (fields: FieldType[]): FieldType[] =>
-  map((field) => {
-    const error = validateField(getFormData(fields), field);
-    if (isGroupField(field)) {
-      return { ...field, fields: validateForm(field.fields) };
+/**
+ *
+ * @param {Form} form
+ */
+export const hasError = <T extends Field>(form: Form<T>): boolean =>
+  !!Object.values(form).find((field) => {
+    if (field.fields) {
+      return hasError(field.fields);
+    }
+    return !!field.errorMessage;
+  });
+
+export const validateForm = <T extends Field>(form: Form<T>): Form<T> =>
+  Object.entries(form).reduce((all, [key, field]) => {
+    const errorMessage = validateField(getFormData(form) as any, field);
+    if (field.fields) {
+      return { ...all, [key]: { ...field, fields: validateForm(field.fields) } };
     }
 
-    return compose(clearField, set(errorMessageLens, error))(field);
-  }, fields);
+    return { ...all, [key]: { ...field, errorMessage } };
+  }, {} as Form<T>);
 
-type IUpdateField = (name: string | string[], fn: <Val>(value: Val) => Val, fields: FieldType[]) => FieldType[];
-
-export const updateField: IUpdateField = (name, fn, fields): FieldType[] =>
-  map((field) => {
-    if (typeof name === 'string' && field.name === name) {
-      return fn(field);
-    } else if (Array.isArray(name) && name.length === 1 && field.name === name[0]) {
-      return fn(field);
-    } else if (Array.isArray(name) && name.length > 1 && field.name === name[0]) {
-      const [groupName, ...rest] = name;
-      const group = fields.find((f) => f.name === groupName);
-      const updatedFields = updateField(rest, fn, group?.fields ?? []);
-      return { ...field, fields: updatedFields };
-    }
-
-    return field;
-  }, fields);
-
-export interface GetFieldValue {
-  <Val>(name: string, fields: FieldType[]): Optional<Val>;
-
-  <Val>(name: string): (fields: FieldType[]) => Optional<Val>;
-}
-
-export const getFieldValue: GetFieldValue = curry((name, fields) => view(lensProp(name), getFormData(fields)));
-
-type SetFieldValue = <Val>(name: string | string[], value: Val, fields: FieldType[]) => FieldType[];
-
-export interface SetFieldValueCurried {
-  <Val>(name: string | string[], value: Val, fields: FieldType[]): FieldType[];
-
-  <Val>(name: string | string[], value: Val): (fields: FieldType[]) => FieldType[];
-}
-
-export const setFieldValue: SetFieldValueCurried = curry<SetFieldValue>((name, value, fields): FieldType[] => updateField(name, set(valueLens, value), fields));
-
-export interface Option<T> {
-  value: T;
-  label?: string;
-}
-
-export type SetFieldOptions = <Val>(name: string | string[], options: Option<Val>[], fields: FieldType[]) => FieldType[];
-
-export interface SetFieldOptionsCurried {
-  <Val>(name: string | string[], options: Option<Val>[], fields: FieldType[]): FieldType[];
-
-  <Val>(name: string | string[], options: Option<Val>[]): (fields: FieldType[]) => FieldType[];
-}
-
-export const setFieldOptions: SetFieldOptionsCurried = curry<SetFieldOptions>((name, options, fields) => updateField(name, set(optionsLens, options), fields));
-
-type SetFieldValues = (name: string | string[], value: number[] | string[], fields: FieldType[]) => FieldType[];
-
-export interface SetFieldValuesCurried {
-  (name: string | string[], value: number[] | string[], fields: FieldType[]): FieldType[];
-
-  (name: string | string[], value: number[] | string[]): (fields: FieldType[]) => FieldType[];
-}
-
-export const setFieldValues: SetFieldValuesCurried = curry<SetFieldValues>((name, value, fields): FieldType[] => updateField(name, set(valuesLens, value), fields));
-
-export const update = ({ value, name, groupName }: UpdateActionType, fields: FieldType[]): FieldType[] =>
-  map((field) => {
-    if (groupName && isGroupField(field)) {
-      return { ...field, fields: update({ value, name, groupName }, field.fields) };
-    } else if (field.name === name) {
-      return { ...field, value } as FieldType;
-    } else {
-      return field;
-    }
-  }, fields);
-
-export const validate = ({ name }: ValidateActionType, fields: FieldType[]): FieldType[] => {
-  return map((field) => {
-    if (isGroupField(field)) {
-      return { ...field, fields: validate({ name }, field.fields) };
-    }
-    if (field.name === name) {
-      const errorMessage = validateField(getFormData(fields), field);
-      return { ...field, errorMessage };
-    }
-
-    return field;
-  }, fields);
-};
-
-export const updateAndValidate = ({ name, value, groupName }: UpdateAndValidateActionType, fields: FieldType[]): FieldType[] => {
-  return map((field) => {
-    if (groupName && isGroupField(field)) {
-      return { ...field, fields: updateAndValidate({ name, value, groupName }, field.fields) };
-    } else if (field.name === name) {
-      const errorMessage = validateField(getFormData(fields), { ...field, value });
-      return { ...field, value, errorMessage } as FieldType;
-    } else {
-      return field;
-    }
-  }, fields);
-};
+export const update = <T extends Field, Value>(path: string | string[], value: Value, form: Form<T>) => setFieldValue(path, value)(form);
+export const validate = <T extends Field>(name: string | string[], form: Form<T>) => updateFunction(name, (field) => ({ ...field, errorMessage: validateField(getFormData(form), field) }))(form);
+export const updateAndValidate = <T extends Field, Value>(path: string | string[], value: Value, form: Form<T>) =>
+  updateFunction(path, (field) => ({ ...field, value, errorMessage: validateField(getFormData(form), { ...field, value }) }))(form);

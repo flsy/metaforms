@@ -1,9 +1,4 @@
 export type Optional<T> = T | undefined;
-export type Value = string | boolean | number | Date | undefined;
-
-export interface FormData {
-  [name: string]: Optional<Value>;
-}
 
 export interface Required {
   type: 'required';
@@ -41,13 +36,13 @@ export interface MaxLength {
 
 export interface MustBeEqual {
   type: 'mustbeequal';
-  value: Value;
+  value: number | boolean | string;
   message: string;
 }
 
 export interface InList {
   type: 'inlist';
-  value: Value[];
+  value: string[];
   message: string;
 }
 
@@ -63,7 +58,7 @@ export interface NotPattern {
   message: string;
 }
 
-export interface Mustnotcontain {
+export interface MustNotContain {
   type: 'mustnotcontain';
   value: string;
   message: string;
@@ -81,4 +76,4 @@ export interface MustMatchCaseInsensitive {
   message: string;
 }
 
-export type Validation = InList | MustBeEqual | Required | MinLength | MaxLength | Pattern | NotPattern | Mustnotcontain | MustMatch | MustMatchCaseInsensitive | Min | Max | IsNumber;
+export type Validation = InList | MustBeEqual | Required | MinLength | MaxLength | Pattern | NotPattern | MustNotContain | MustMatch | MustMatchCaseInsensitive | Min | Max | IsNumber;

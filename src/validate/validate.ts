@@ -1,8 +1,9 @@
-import { FormData, InList, IsNumber, Max, MaxLength, Min, MinLength, MustBeEqual, MustMatch, MustMatchCaseInsensitive, Mustnotcontain, NotPattern, Optional, Pattern, Required, Validation, Value } from './interfaces';
+import { InList, IsNumber, Max, MaxLength, Min, MinLength, MustBeEqual, MustMatch, MustMatchCaseInsensitive, MustNotContain, NotPattern, Optional, Pattern, Required } from './interfaces';
+import { Field, FieldBody, FormData } from '../interfaces';
 
-const isString = (value: Value): value is string => typeof value === 'string';
-const isNumber = (value: Value): value is number => typeof value === 'number';
-const parseNumber = (value: Value): Optional<number> => {
+const isString = (value: any): value is string => typeof value === 'string';
+const isNumber = (value: any): value is number => typeof value === 'number';
+const parseNumber = (value: any): Optional<number> => {
   if (!value) {
     return undefined;
   }
@@ -17,23 +18,23 @@ const parseNumber = (value: Value): Optional<number> => {
   return undefined;
 };
 
-const isEmpty = (value: Value, rule: Required): Optional<string> => (value === null || value === undefined || value === '' ? rule.message : undefined);
+const isEmpty = <Value extends unknown>(value: Value, rule: Required): Optional<string> => (value === null || value === undefined || value === '' ? rule.message : undefined);
 
-const getErrorIfDoesNotMatchRegEx = (value: Value, rule: Pattern): Optional<string> => {
+const getErrorIfDoesNotMatchRegEx = <Value>(value: Value, rule: Pattern): Optional<string> => {
   if (isString(value) && value.length > 0) {
     return value.match(rule.value) === null ? rule.message : undefined;
   }
   return undefined;
 };
 
-const getErrorIfMatchesRegEx = (value: Value, rule: NotPattern): Optional<string> => {
+const getErrorIfMatchesRegEx = <Value>(value: Value, rule: NotPattern): Optional<string> => {
   if (isString(value) && value.length > 0) {
     return value.match(rule.value) !== null ? rule.message : undefined;
   }
   return undefined;
 };
 
-const isLessThanMin = (value: Value, rule: Min): Optional<string> => {
+const isLessThanMin = <Value>(value: Value, rule: Min): Optional<string> => {
   const parsedNumber = parseNumber(value);
   if (!parsedNumber) {
     return undefined;
@@ -42,7 +43,7 @@ const isLessThanMin = (value: Value, rule: Min): Optional<string> => {
   return parsedNumber < rule.value ? rule.message : undefined;
 };
 
-const isGreaterThanMax = (value: Value, rule: Max): Optional<string> => {
+const isGreaterThanMax = <Value>(value: Value, rule: Max): Optional<string> => {
   const parsedNumber = parseNumber(value);
   if (!parsedNumber) {
     return undefined;
@@ -51,19 +52,19 @@ const isGreaterThanMax = (value: Value, rule: Max): Optional<string> => {
   return parsedNumber > rule.value ? rule.message : undefined;
 };
 
-const validateIsNumber = (value: Value, rule: IsNumber): Optional<string> => (value && !isNumber(value) ? rule.message : undefined);
+const validateIsNumber = <Value>(value: Value, rule: IsNumber): Optional<string> => (value && !isNumber(value) ? rule.message : undefined);
 
-const isNotEqualToExpectedValue = (value: Value, rule: MustBeEqual): Optional<string> => (value !== rule.value ? rule.message : undefined);
+const isNotEqualToExpectedValue = (value: any, rule: MustBeEqual): Optional<string> => (value !== rule.value ? rule.message : undefined);
 
-const isInList = (value: Value, rule: InList): Optional<string> => (rule.value.indexOf(value) === -1 ? rule.message : undefined);
+const isInList = <Value>(value: any, rule: InList): Optional<string> => (!rule.value.includes(value) ? rule.message : undefined);
 
-const isGreaterThanMaxLength = (value: Value, rule: MaxLength): Optional<string> => (isString(value) && value.length > rule.value ? rule.message : undefined);
+const isGreaterThanMaxLength = <Value>(value: Value, rule: MaxLength): Optional<string> => (isString(value) && value.length > rule.value ? rule.message : undefined);
 
-const isLessThanMinLength = (value: Value, rule: MinLength): Optional<string> => (isString(value) && value.length < rule.value ? rule.message : undefined);
+const isLessThanMinLength = <Value>(value: Value, rule: MinLength): Optional<string> => (isString(value) && value.length < rule.value ? rule.message : undefined);
 
-const mustMatch = (value: Value, rule: MustMatch, formData: FormData): Optional<string> => (formData[rule.value] && formData[rule.value] !== value ? rule.message : undefined);
+const mustMatch = <Value, Form extends Field>(value: Value, rule: MustMatch, formData: FormData<Form>): Optional<string> => (formData[rule.value] && formData[rule.value] !== value ? rule.message : undefined);
 
-const mustNotContain = (value: Value, rule: Mustnotcontain, formData: FormData): Optional<string> => {
+const mustNotContain = <Value, Form extends Field>(value: Value, rule: MustNotContain, formData: FormData<Form>): Optional<string> => {
   const data = formData[rule.value];
   if (data && isString(data) && isString(value)) {
     return value.toLowerCase().includes(data.toLowerCase()) ? rule.message : undefined;
@@ -72,15 +73,12 @@ const mustNotContain = (value: Value, rule: Mustnotcontain, formData: FormData):
 
 const equalIgnoreCase = (a?: string, b?: string) => a && b && a.toLowerCase() === b.toLowerCase();
 
-const mustMatchCaseInsensitive = (value: Value, rule: MustMatchCaseInsensitive, formData: FormData): Optional<string> =>
-  isString(value) && !equalIgnoreCase(formData[rule.value]?.toString(), value) ? rule.message : undefined;
+const mustMatchCaseInsensitive = <Value, Form extends Field>(value: Value, rule: MustMatchCaseInsensitive, formData: FormData<Form>): Optional<string> => {
+  const target = formData[rule.value];
+  return isString(value) && isString(target) && !equalIgnoreCase(target, value) ? rule.message : undefined;
+};
 
-interface IField {
-  value?: Value;
-  validation?: Validation[];
-}
-
-export const validateField = (formData: FormData, field: IField): Optional<string> => {
+export const validateField = <T extends Field, Value = unknown>(formData: FormData<T>, field: Partial<FieldBody<Value>>): Optional<string> => {
   const errorMessages = (field.validation || [])
     .map((rule) => {
       switch (rule.type) {

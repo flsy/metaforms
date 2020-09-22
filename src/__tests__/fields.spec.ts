@@ -1,23 +1,20 @@
-import { FieldType, getFormData, hasError, maxlength, pattern, required, setFieldValue, validateForm } from '..';
+import { Form, getFormData, hasError, maxlength, pattern, required, setFieldValue, validateForm } from '..';
 import { compose } from 'fputils';
 
-const fields: FieldType[] = [
-  {
+const fields: Form<any> = {
+  name: {
     type: 'text',
-    name: 'name',
     validation: [required('fill name')],
   },
-  {
+  age: {
     type: 'number',
-    name: 'age',
     validation: [required('fill age'), maxlength('max 3 digits', 3)],
   },
-  {
+  born: {
     type: 'datetime-local',
-    name: 'born',
     validation: [required('fill DOB'), pattern('wrong date format', '^[0-9]+$')],
   },
-];
+};
 
 describe('fields behaviour', () => {
   it('returns errors when fields are empty', () => {
@@ -25,9 +22,9 @@ describe('fields behaviour', () => {
 
     expect(hasError(result)).toEqual(true);
 
-    expect(result[0].errorMessage).toEqual('fill name');
-    expect(result[1].errorMessage).toEqual('fill age');
-    expect(result[2].errorMessage).toEqual('fill DOB');
+    expect(result.name.errorMessage).toEqual('fill name');
+    expect(result.age.errorMessage).toEqual('fill age');
+    expect(result.born.errorMessage).toEqual('fill DOB');
   });
 
   it('returns errors when fields filled with wrong values', () => {
@@ -37,9 +34,9 @@ describe('fields behaviour', () => {
 
     expect(hasError(result)).toEqual(true);
 
-    expect(result[0].errorMessage).toEqual(undefined);
-    expect(result[1].errorMessage).toEqual('max 3 digits');
-    expect(result[2].errorMessage).toEqual('wrong date format');
+    expect(result.name.errorMessage).toEqual(undefined);
+    expect(result.age.errorMessage).toEqual('max 3 digits');
+    expect(result.born.errorMessage).toEqual('wrong date format');
   });
 
   it('returns no errors when fields are properly filled', () => {
@@ -49,9 +46,9 @@ describe('fields behaviour', () => {
 
     expect(hasError(result)).toEqual(false);
 
-    expect(result[0].errorMessage).toEqual(undefined);
-    expect(result[1].errorMessage).toEqual(undefined);
-    expect(result[2].errorMessage).toEqual(undefined);
+    expect(result.name.errorMessage).toEqual(undefined);
+    expect(result.age.errorMessage).toEqual(undefined);
+    expect(result.born.errorMessage).toEqual(undefined);
 
     expect(getFormData(filled)).toEqual({ name: 'Joel', age: 50, born: '20' });
   });
