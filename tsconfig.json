@@ -4,14 +4,9 @@
     "module": "commonjs",
     "declaration": true,
     "outDir": "./lib",
+    "rootDir": "./src",
     "strict": true,
     "lib": ["esnext"]
   },
-  "include": [
-    "src"
-  ],
-  "exclude": [
-    "node_modules",
-    "**/__tests__/*"
-  ]
+  "exclude": ["./src/**/*.spec.ts", "node_modules", "lib"]
 }

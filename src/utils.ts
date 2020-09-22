@@ -1,8 +1,7 @@
-import { find, head, Optional, propEq } from 'fputils';
-import { Validation, ValueOf } from './validate/interfaces';
+import { find, Optional, propEq } from 'fputils';
+import { Validation } from './validate/interfaces';
 import { Field, FieldBody, Form, FormData } from './interfaces';
 import { validateField } from './validate/validate';
-import { required } from './validate/rules';
 
 export const isRequired = (validationRules: Validation[] = []): boolean => !!find(propEq('type', 'required'), validationRules);
 
@@ -11,6 +10,7 @@ const fieldNameWithoutValue = <T extends Field>(form: Form<T>): Optional<string>
 
 /**
  * returns a name of field
+ *
  * @param form
  */
 export const shouldComponentFocus = <T extends Field>(form: Form<T>): Optional<string> => {
@@ -56,7 +56,7 @@ const updateFunction = <D extends Field>(name: keyof D | string[], fn: (field: F
       return { ...all, [key]: { ...field, ...fn(field) } };
     }
     return { ...all, [key]: field };
-  }, {} as any) as any;
+  }, {} as any);
 
 export const setFieldOptions = <Option>(name: string | string[], options: Option[]) => updateFunction(name, (field) => ({ ...field, options }));
 export const setFieldValue = <Value>(name: string | string[], value: Value) => updateFunction(name, (field) => ({ ...field, value }));
