@@ -54,9 +54,9 @@ const isGreaterThanMax = <Value>(value: Value, rule: Max): Optional<string> => {
 
 const validateIsNumber = <Value>(value: Value, rule: IsNumber): Optional<string> => (value && !isNumber(value) ? rule.message : undefined);
 
-const isNotEqualToExpectedValue = (value: any, rule: MustBeEqual): Optional<string> => (value !== rule.value ? rule.message : undefined);
+const isNotEqualToExpectedValue = <Value extends any>(value: Value, rule: MustBeEqual): Optional<string> => (value !== rule.value ? rule.message : undefined);
 
-const isInList = <Value>(value: any, rule: InList): Optional<string> => (!rule.value.includes(value) ? rule.message : undefined);
+const isInList = (value: any, rule: InList): Optional<string> => (!rule.value.includes(value) ? rule.message : undefined);
 
 const isGreaterThanMaxLength = <Value>(value: Value, rule: MaxLength): Optional<string> => (isString(value) && value.length > rule.value ? rule.message : undefined);
 
@@ -78,7 +78,7 @@ const mustMatchCaseInsensitive = <Value, Form extends Field>(value: Value, rule:
   return isString(value) && isString(target) && !equalIgnoreCase(target, value) ? rule.message : undefined;
 };
 
-export const validateField = <T extends Field, Value = unknown>(formData: FormData<T>, field: Partial<FieldBody>): Optional<string> => {
+export const validateField = <T extends Field>(formData: FormData<T>, field: Partial<FieldBody>): Optional<string> => {
   const errorMessages = (field.validation || [])
     .map((rule) => {
       switch (rule.type) {
