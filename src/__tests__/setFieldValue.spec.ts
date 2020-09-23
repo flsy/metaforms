@@ -1,10 +1,10 @@
 import { setFieldValue } from '../utils';
-import { Form } from '../interfaces';
+import { IForm } from '../interfaces';
 import { GroupField, NumberField, TextField } from '../testInterfaces';
 
 describe('setFieldValue', () => {
   it('set the value on simple path', () => {
-    const form: Form<{ name: TextField }> = {
+    const form: IForm<{ name: TextField }> = {
       name: {
         type: 'text',
       },
@@ -19,7 +19,7 @@ describe('setFieldValue', () => {
   });
 
   it('set the value on simple path defined by string array', () => {
-    const form: Form<{ name: TextField }> = {
+    const form: IForm<{ name: TextField }> = {
       name: {
         type: 'text',
       },
@@ -34,7 +34,7 @@ describe('setFieldValue', () => {
   });
 
   it('set the value on nested path', () => {
-    const form: Form<{ name: GroupField<{ firstName: TextField }> }> = {
+    const form: IForm<{ name: GroupField<{ firstName: TextField }> }> = {
       name: {
         type: 'group',
         fields: {
@@ -59,7 +59,7 @@ describe('setFieldValue', () => {
   });
 
   it('set values on two fields', () => {
-    const form: Form<{ name: TextField; age: NumberField }> = {
+    const form: IForm<{ name: TextField; age: NumberField }> = {
       name: {
         type: 'text',
       },

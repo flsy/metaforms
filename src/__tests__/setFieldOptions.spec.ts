@@ -1,4 +1,4 @@
-import { Form } from '../interfaces';
+import { IForm } from '../interfaces';
 import { setFieldOptions } from '../utils';
 
 interface Option {
@@ -11,7 +11,7 @@ export interface FieldWithOptions {
   options: Option[];
 }
 
-const form: Form<{ field1: FieldWithOptions }> = {
+const form: IForm<{ field1: FieldWithOptions }> = {
   field1: {
     type: 'myField',
     options: [],

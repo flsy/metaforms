@@ -1,10 +1,10 @@
 import { getFormData } from '../utils';
-import { Form } from '../interfaces';
+import { IForm } from '../interfaces';
 import { GroupField, NumberField, SubmitField, TextField } from '../testInterfaces';
 
 describe('getFormData', () => {
   it('returns form data', () => {
-    type MyForm = Form<{ name: TextField; detailed: GroupField<{ age: NumberField; emptyGroup: GroupField<{}> }>; submit: SubmitField }>;
+    type MyForm = IForm<{ name: TextField; detailed: GroupField<{ age: NumberField; emptyGroup: GroupField<{}> }>; submit: SubmitField }>;
 
     const form1: MyForm = {
       name: {
@@ -48,7 +48,7 @@ describe('getFormData', () => {
       value: number[];
     }
 
-    type MyForm = Form<{ myCustom: NumberValuesField; myGroup: GroupField<{ myCustomNested: NumberValuesField; inGroup: TextField }>; submit: SubmitField }>;
+    type MyForm = IForm<{ myCustom: NumberValuesField; myGroup: GroupField<{ myCustomNested: NumberValuesField; inGroup: TextField }>; submit: SubmitField }>;
 
     const form1: MyForm = {
       myCustom: {
