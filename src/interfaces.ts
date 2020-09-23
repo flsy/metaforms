@@ -1,6 +1,6 @@
 import { Validation } from './validate/interfaces';
 
-export type Form<T extends { [name: string]: { type: string } }> = T;
+export type IForm<T extends { [name: string]: { type: string } }> = T;
 
 export interface FieldBody {
   type: string;

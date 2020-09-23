@@ -1,5 +1,5 @@
 import { hasError, isRequired, setFieldValue, update, validate, validateForm } from '../utils';
-import { Form, required, Validation } from '..';
+import { IForm, required, Validation } from '..';
 
 describe('utils', () => {
   describe('isRequired', () => {
@@ -26,7 +26,7 @@ describe('utils', () => {
   describe('validateForm', () => {
     const message = 'This field is required error message';
     it('validates a form', () => {
-      const form: Form<any> = {
+      const form: IForm<any> = {
         myField: {
           type: 'text',
           validation: [
@@ -46,7 +46,7 @@ describe('utils', () => {
     });
 
     it('validates a field with more validations', () => {
-      const fields: Form<any> = {
+      const fields: IForm<any> = {
         myField: {
           name: 'name',
           value: 'v',
@@ -70,7 +70,7 @@ describe('utils', () => {
 
   describe('setFieldValue', () => {
     it('sets a value on exact field', () => {
-      const fields: Form<any> = { name: { value: 'a' }, surname: { value: 'b' } };
+      const fields: IForm<any> = { name: { value: 'a' }, surname: { value: 'b' } };
 
       expect(setFieldValue('name', 'hey yo!')(fields).name.value).toEqual('hey yo!');
       expect(fields.surname.value).toEqual('b');
@@ -78,13 +78,13 @@ describe('utils', () => {
     });
 
     it('sets a numeric value', () => {
-      const fields: Form<any> = { name: {} };
+      const fields: IForm<any> = { name: {} };
 
       expect(setFieldValue('name', 12)(fields).name.value).toEqual(12);
     });
 
     it('sets a value on nested fields', () => {
-      const fields: Form<any> = {
+      const fields: IForm<any> = {
         a: { type: 'text' },
         b: {
           type: 'group',
@@ -110,7 +110,7 @@ describe('utils', () => {
     });
 
     it("shouldn't set a value to nested field without groupName", () => {
-      const fields: Form<any> = {
+      const fields: IForm<any> = {
         a: { type: 'text' },
         b: {
           type: 'group',
@@ -143,7 +143,7 @@ describe('utils', () => {
 
       expect(update(name, value, {})).toEqual({});
 
-      const differentFields: Form<any> = { b: { type: 'text' } };
+      const differentFields: IForm<any> = { b: { type: 'text' } };
 
       expect(update('a', value, differentFields)).toEqual(differentFields);
 
@@ -151,7 +151,7 @@ describe('utils', () => {
     });
 
     it('updates a grouped structure', () => {
-      const fields: Form<any> = {
+      const fields: IForm<any> = {
         a: { type: 'text' },
         groupA: {
           type: 'group',
@@ -163,7 +163,7 @@ describe('utils', () => {
       };
 
       const value = 'value X';
-      const expected: Form<any> = {
+      const expected: IForm<any> = {
         a: { type: 'text' },
         groupA: {
           type: 'group',
@@ -178,7 +178,7 @@ describe('utils', () => {
     });
 
     it('updates a nested grouped structure', () => {
-      const fields: Form<any> = {
+      const fields: IForm<any> = {
         a: { type: 'text' },
         groupA: {
           type: 'group',
@@ -196,7 +196,7 @@ describe('utils', () => {
       };
 
       const value = 'value Y';
-      const expected: Form<any> = {
+      const expected: IForm<any> = {
         a: { type: 'text' },
         groupA: {
           type: 'group',
@@ -239,7 +239,7 @@ describe('utils', () => {
     });
 
     it('validates a nested structure', () => {
-      const fields: Form<any> = {
+      const fields: IForm<any> = {
         a: { type: 'text' },
         groupA: {
           type: 'group',
@@ -250,7 +250,7 @@ describe('utils', () => {
         },
       };
 
-      const expected: Form<any> = {
+      const expected: IForm<any> = {
         a: { type: 'text' },
         groupA: {
           type: 'group',

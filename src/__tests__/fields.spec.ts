@@ -1,7 +1,7 @@
-import { Form, getFormData, hasError, maxlength, pattern, required, setFieldValue, validateForm } from '..';
+import { IForm, getFormData, hasError, maxlength, pattern, required, setFieldValue, validateForm } from '..';
 import { compose } from 'fputils';
 
-const fields: Form<any> = {
+const fields: IForm<any> = {
   name: {
     type: 'text',
     validation: [required('fill name')],

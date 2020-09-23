@@ -1,4 +1,4 @@
-import { Form } from '../interfaces';
+import { IForm } from '../interfaces';
 import { GroupField, TextField } from '../testInterfaces';
 import { addFieldIntoGroup } from '../utils';
 
@@ -12,7 +12,7 @@ const groupfield: GroupField<{}> = {
   fields: {},
 };
 
-const form: Form<{ field1: TextField; myGroup: GroupField<{}> }> = {
+const form: IForm<{ field1: TextField; myGroup: GroupField<{}> }> = {
   myGroup: groupfield,
   field1,
 };
@@ -44,7 +44,7 @@ describe('addGroup', () => {
 
   it('add a group into nested fields', () => {
     const field: TextField = { type: 'text', value: 'my' };
-    const form1: Form<{ myGroup: GroupField<{ nestedGroup: GroupField<{}> }> }> = {
+    const form1: IForm<{ myGroup: GroupField<{ nestedGroup: GroupField<{}> }> }> = {
       myGroup: {
         type: 'group',
         fields: {
