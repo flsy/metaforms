@@ -72,15 +72,15 @@ describe('utils', () => {
     it('sets a value on exact field', () => {
       const fields: IForm<any> = { name: { value: 'a' }, surname: { value: 'b' } };
 
-      expect(setFieldValue('name', 'hey yo!')(fields).name.value).toEqual('hey yo!');
+      expect(setFieldValue('name', 'hey yo!')(fields)!.name!.value).toEqual('hey yo!');
       expect(fields.surname.value).toEqual('b');
-      expect(setFieldValue('surname', 'b yo!')(fields).surname.value).toEqual('b yo!');
+      expect(setFieldValue('surname', 'b yo!')(fields)!.surname!.value).toEqual('b yo!');
     });
 
     it('sets a numeric value', () => {
       const fields: IForm<any> = { name: {} };
 
-      expect(setFieldValue('name', 12)(fields).name.value).toEqual(12);
+      expect(setFieldValue('name', 12)(fields)!.name!.value).toEqual(12);
     });
 
     it('sets a value on nested fields', () => {

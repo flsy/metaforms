@@ -1,6 +1,6 @@
-import { FieldBody } from './interfaces';
+import { FieldBody, Optional } from './interfaces';
 
-export interface GroupField<T extends { [name: string]: { type: string } }> {
+export interface GroupField<T extends { [name: string]: Optional<{ type: string }> }> {
   type: 'group';
   legend?: string;
   fields: T;

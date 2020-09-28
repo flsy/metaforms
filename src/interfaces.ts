@@ -1,6 +1,7 @@
 import { Validation } from './validate/interfaces';
 
-export type IForm<T extends { [name: string]: { type: string } }> = T;
+export type Optional<T> = T | undefined;
+export type ValueOf<T> = T[keyof T];
 
 export interface FieldBody {
   type: string;
@@ -11,7 +12,12 @@ export interface FieldBody {
 }
 
 export interface Field {
-  [name: string]: FieldBody;
+  [name: string]: Optional<FieldBody>;
 }
+export type IForm<T extends Field> = T;
 
-export type FormData<T extends Field> = { [key in keyof T]: T[key]['fields'] extends object ? FormData<T[key]['fields']> : T[key]['value'] };
+type FieldValue<T extends FieldBody> = T['fields'] extends object ? FormData<T['fields']> : T['value'];
+
+export type FormData<T extends Field> = {
+  [key in keyof T]: T[key] extends object ? FieldValue<T[key]> : undefined;
+};
