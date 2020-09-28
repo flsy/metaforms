@@ -4,7 +4,7 @@ import { GroupField, NumberField, SubmitField, TextField } from '../testInterfac
 
 describe('getFormData', () => {
   it('returns form data', () => {
-    type MyForm = IForm<{ name: TextField; detailed: GroupField<{ age: NumberField; emptyGroup: GroupField<{}> }>; submit: SubmitField }>;
+    type MyForm = IForm<{ name: TextField; detailed: GroupField<{ age: NumberField; emptyGroup: GroupField<{ update?: NumberField }> }>; submit: SubmitField }>;
 
     const form1: MyForm = {
       name: {
@@ -21,13 +21,12 @@ describe('getFormData', () => {
           emptyGroup: {
             type: 'group',
             fields: {
-              d: {
-                type: 'text',
-              },
+              update: undefined,
             },
           },
         },
       },
+
       submit: {
         type: 'submit',
       },
