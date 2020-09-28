@@ -1,5 +1,5 @@
-import { InList, IsNumber, Max, MaxLength, Min, MinLength, MustBeEqual, MustMatch, MustMatchCaseInsensitive, MustNotContain, NotPattern, Optional, Pattern, Required } from './interfaces';
-import { Field, FieldBody, FormData } from '../interfaces';
+import { InList, IsNumber, Max, MaxLength, Min, MinLength, MustBeEqual, MustMatch, MustMatchCaseInsensitive, MustNotContain, NotPattern, Pattern, Required } from './interfaces';
+import { Field, FieldBody, FormData, Optional } from '../interfaces';
 
 const isString = (value: any): value is string => typeof value === 'string';
 const isNumber = (value: any): value is number => typeof value === 'number';
@@ -62,7 +62,13 @@ const isGreaterThanMaxLength = <Value>(value: Value, rule: MaxLength): Optional<
 
 const isLessThanMinLength = <Value>(value: Value, rule: MinLength): Optional<string> => (isString(value) && value.length < rule.value ? rule.message : undefined);
 
-const mustMatch = <Value, Form extends Field>(value: Value, rule: MustMatch, formData: FormData<Form>): Optional<string> => (formData[rule.value] && formData[rule.value] !== value ? rule.message : undefined);
+const mustMatch = <Value, Form extends Field>(value: Value, rule: MustMatch, formData: FormData<Form>): Optional<string> => {
+  if (!formData[rule.value] || formData[rule.value] === (value as any)) {
+    return;
+  }
+
+  return rule.message;
+};
 
 const mustNotContain = <Value, Form extends Field>(value: Value, rule: MustNotContain, formData: FormData<Form>): Optional<string> => {
   const data = formData[rule.value];
@@ -79,6 +85,10 @@ const mustMatchCaseInsensitive = <Value, Form extends Field>(value: Value, rule:
 };
 
 export const validateField = <T extends Field>(formData: FormData<T>, field: Partial<FieldBody>): Optional<string> => {
+  if (!field) {
+    return undefined;
+  }
+
   const errorMessages = (field.validation || [])
     .map((rule) => {
       switch (rule.type) {
