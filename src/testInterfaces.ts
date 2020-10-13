@@ -18,6 +18,11 @@ export interface TextField extends FieldBody {
   value?: string;
 }
 
+export interface BooleanField extends FieldBody {
+  type: 'boolean';
+  value?: boolean;
+}
+
 export interface SubmitField {
   type: 'submit';
   label?: string;
