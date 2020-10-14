@@ -3,6 +3,8 @@ import { Validation } from './validate/interfaces';
 import { Field, FieldBody, FormData } from './interfaces';
 import { validateField } from './validate/validate';
 
+const isNotEmpty = (value: any) => value !== null || value !== undefined;
+
 const has = <T extends object>(property: keyof T, o?: T): boolean => !!(o && o[property]);
 
 export const isRequired = (validationRules: Validation[] = []): boolean => !!find(propEq('type', 'required'), validationRules);
@@ -37,7 +39,7 @@ export const getFormData = <T extends Field>(form: T): FormData<T> =>
       }
       return { ...all };
     }
-    if (field && field.value) {
+    if (field && isNotEmpty(field.value)) {
       return { ...all, [name]: field.value };
     }
     return all;
@@ -65,7 +67,6 @@ const updateFunction = <D extends Field>(name: keyof D | string[], fn: (field: F
 
 export const setFieldOptions = <Option>(name: string | string[], options: Option[]) => updateFunction(name, (field) => ({ ...field, options }));
 export const setFieldValue = <Value>(name: string | string[], value: Value) => updateFunction(name, (field) => ({ ...field, value }));
-export const setFieldValues = (name: string | string[], values: number[] | string[]) => updateFunction(name, (field) => ({ ...field, values }));
 
 export const addFieldIntoGroup = <T extends { [name: string]: { type: string; fields?: T } }, F extends { type: string }>(path: string, newFieldName: string, newField: F) => (form: T): T => {
   return Object.entries(form).reduce((all, [key, field]) => {
