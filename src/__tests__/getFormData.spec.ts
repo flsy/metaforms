@@ -1,10 +1,10 @@
 import { getFormData } from '../utils';
 import { IForm } from '../interfaces';
-import { GroupField, NumberField, SubmitField, TextField } from '../testInterfaces';
+import { BooleanField, GroupField, NumberField, SubmitField, TextField } from '../testInterfaces';
 
 describe('getFormData', () => {
   it('returns form data', () => {
-    type MyForm = IForm<{ name: TextField; detailed: GroupField<{ age: NumberField; emptyGroup: GroupField<{ update?: NumberField }> }>; submit: SubmitField }>;
+    type MyForm = IForm<{ name: TextField; detailed: GroupField<{ age: NumberField; agree: BooleanField; emptyGroup: GroupField<{ update?: NumberField }> }>; submit: SubmitField }>;
 
     const form1: MyForm = {
       name: {
@@ -17,6 +17,10 @@ describe('getFormData', () => {
           age: {
             type: 'number',
             value: 18,
+          },
+          agree: {
+            type: 'boolean',
+            value: false,
           },
           emptyGroup: {
             type: 'group',
@@ -33,9 +37,10 @@ describe('getFormData', () => {
     };
 
     const data = getFormData(form1);
-    expect(data).toEqual({
+    expect(data).toMatchObject({
       name: 'default value',
       detailed: {
+        agree: false,
         age: 18,
       },
     });
