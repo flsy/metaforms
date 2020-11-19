@@ -1,0 +1,21 @@
+{
+  "name": "antd-metaforms",
+  "version": "1.0.0",
+  "description": "Ant design hooked into react-metaforms",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "antd": "^4.8.4",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-metaforms": "^3.0.5"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.49",
+    "@types/react-dom": "^16.9.8"
+  }
+}

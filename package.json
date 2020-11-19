@@ -1,0 +1,18 @@
+{
+  "name": "meta",
+  "version": "1.0.0",
+  "description": "Monorepo for all meta libs",
+  "main": "index.js",
+  "repository": "https://github.com/flsy/meta.git",
+  "author": "Jakub Kolebaba <jakub@kolebaba.cz>",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "example"
+  ],
+  "scripts": {
+    "build": "yarn workspaces run build",
+    "start": "yarn workspace example run start"
+  }
+}
