@@ -1,18 +1,11 @@
 import React from 'react';
 import {storiesOf} from "@storybook/react";
 import FormTemplate from "./FormTemplate";
+import {AntBuilder} from "build-metaforms";
 
-const defaultForm = {
-  name: {
-    type: 'input',
-    placeholder: 'Write something',
-    label: 'Text input'
-  },
-  submit: {
-    type: 'submit',
-    label: 'Submit'
-  }
-}
+const builder = new AntBuilder()
+  .addInput({ name: 'name', label: 'Text input', placeholder: "Write something" })
+  .addSubmit({ name: 'submit', label: 'Submit' })
 
-storiesOf('antd-metaforms', module).add('input', () => <FormTemplate defaultForm={defaultForm}/>);
+storiesOf('antd-metaforms', module).add('input', () => <FormTemplate defaultForm={builder.build()}/>);
 
