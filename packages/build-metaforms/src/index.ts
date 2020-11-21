@@ -1,24 +1,17 @@
-class Builder {
-  fields: { [key:string]: any } = {};
+type OmitType<T extends { type: string }> = Omit<T, 'type'>;
 
-  addField = (name: string, type: string, props: { [key: string]: any}) => {
-    this.fields[name] = { type, ...props };
-    return this;
-  }
+type InputProps = { type: 'input', label: string, placeholder?: string };
+type SubmitProps = { type: 'submit', label: string };
 
-  build = () => this.fields;
+type Fields = { [key: string]: SubmitProps | InputProps }
+type Field<T> = { [key: string]: T }
+
+export const input = <T>(name: string, props?: OmitType<InputProps>) => (fields: T): T & Field<InputProps> => {
+  return {...fields, [name]: { type: 'input', ...props }}
 }
 
-type InputProps = { label: string, placeholder: string };
-type SubmitProps = { label: string };
-
-export class AntBuilder extends Builder {
-  addInput = (name: string, p?: InputProps) => {
-    this.addField(name, 'input', p);
-    return this;
-  }
-  addSubmit = (name, p?: SubmitProps) => {
-    this.addField(name, 'submit', p);
-    return this;
-  }
+export const submit = <T>(name: string, props?: OmitType<SubmitProps>) => (fields: T): T & Field<SubmitProps> => {
+  return {...fields, [name]: { type: 'submit', ...props }}
 }
+
+export const build = <T>(...fc: Array<(fields: Fields) => Fields>) => fc.reduce((acc, f) => f(acc), {} as Fields);
