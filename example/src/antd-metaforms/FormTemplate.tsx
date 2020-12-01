@@ -1,4 +1,4 @@
-import {Form} from "antd-metaforms";
+import {Form} from "@metaforms/antd";
 import React, {useState} from "react";
 
 

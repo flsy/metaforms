@@ -1,5 +1,5 @@
 {
-  "name": "antd-metaforms",
+  "name": "@metaforms/antd",
   "version": "1.0.0",
   "description": "Ant design hooked into react-metaforms",
   "main": "lib/index.js",

@@ -1,1 +1,0 @@
-should convert metaform definition into nexus input / output
