@@ -1,8 +1,7 @@
 import React from 'react';
 import {storiesOf} from "@storybook/react";
 import FormTemplate from "./FormTemplate";
-import {build, input, submit} from "@metaforms/builder";
-
+import {build, input, submit} from "metaforms-builder";
 
 const form = build(
   input('name'),

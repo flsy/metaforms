@@ -5,8 +5,8 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "@metaforms/antd": "1.0.0",
-    "@metaforms/builder": "1.0.0",
+    "metaforms-antd": "1.0.0",
+    "metaforms-builder": "1.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "typescript": "4.0.3"

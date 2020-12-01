@@ -1,5 +1,5 @@
 {
-  "name": "@metaforms/builder",
+  "name": "metaforms-builder",
   "version": "1.0.0",
   "description": "Metaforms builder",
   "main": "lib/index.js",

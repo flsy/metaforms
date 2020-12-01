@@ -1,5 +1,5 @@
 {
-  "name": "@metaforms/antd",
+  "name": "metaforms-antd",
   "version": "1.0.0",
   "description": "Ant design hooked into react-metaforms",
   "main": "lib/index.js",
@@ -12,6 +12,7 @@
     "antd": "^4.8.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "metaforms": "^1.0.3",
     "react-metaforms": "^3.0.5"
   },
   "devDependencies": {
