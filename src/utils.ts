@@ -1,4 +1,4 @@
-import { find, Optional, propEq } from 'fputils';
+import { find, isArray, Optional, propEq } from 'fputils';
 import { Validation } from './validate/interfaces';
 import { Field, FieldBody, FormData } from './interfaces';
 import { validateField } from './validate/validate';
@@ -50,7 +50,7 @@ const updateFunction = <D extends Field>(name: keyof D | string[], fn: (field: F
     if (!field) {
       return all;
     }
-    if (Array.isArray(name)) {
+    if (isArray(name)) {
       if (name.length === 1 && key === name[0]) {
         return { ...all, [key]: { ...field, ...fn(field) } };
       }
