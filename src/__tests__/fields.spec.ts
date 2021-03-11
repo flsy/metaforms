@@ -34,9 +34,9 @@ describe('fields behaviour', () => {
 
     expect(hasError(result)).toEqual(true);
 
-    expect(result.name.errorMessage).toEqual(undefined);
-    expect(result.age.errorMessage).toEqual('max 3 digits');
-    expect(result.born.errorMessage).toEqual('wrong date format');
+    expect(result?.name?.errorMessage).toEqual(undefined);
+    expect(result?.age?.errorMessage).toEqual('max 3 digits');
+    expect(result?.born?.errorMessage).toEqual('wrong date format');
   });
 
   it('returns no errors when fields are properly filled', () => {
@@ -46,9 +46,9 @@ describe('fields behaviour', () => {
 
     expect(hasError(result)).toEqual(false);
 
-    expect(result.name.errorMessage).toEqual(undefined);
-    expect(result.age.errorMessage).toEqual(undefined);
-    expect(result.born.errorMessage).toEqual(undefined);
+    expect(result?.name?.errorMessage).toEqual(undefined);
+    expect(result?.age?.errorMessage).toEqual(undefined);
+    expect(result?.born?.errorMessage).toEqual(undefined);
 
     expect(getFormData(filled)).toEqual({ name: 'Joel', age: 50, born: '20' });
   });
